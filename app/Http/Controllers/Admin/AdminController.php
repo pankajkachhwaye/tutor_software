@@ -1,0 +1,117 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Model\Contact;
+use App\Model\StudentCoursePayHistory;
+use App\Model\StudentDailyPayHistory;
+use App\Model\Week;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Carbon\Carbon;
+use Response;
+
+class AdminController extends Controller
+{
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
+    public function index(){
+        $page = 'dashboard';
+        return view('tutor.admin.dashboard', compact('page'));
+    }
+
+    public function addWeek(Request $request){
+//        dd($request->all());
+
+        $start_date = date('Y-m-d',strtotime($request->start_date)).' '.'18:30:00';
+        $end_date = date('Y-m-d',strtotime($request->end_date)).' '.'18:29:59';
+        $insert_data = [
+          'start_date' => $start_date,
+          'end_date' => $end_date,
+          'week_name' => $request->week_name,
+          'created_at' => Carbon::now(),
+        ];
+
+        Week::insert($insert_data);
+        return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+
+     }
+
+     public function updateWeek(Request $request){
+//        dd($request->all());
+
+        $start_date = date('Y-m-d',strtotime($request->start_date)).' '.'18:30:00';
+        $end_date = date('Y-m-d',strtotime($request->end_date)).' '.'18:29:59';
+        $insert_data = [
+          'start_date' => $start_date,
+          'end_date' => $end_date,
+          'week_name' => $request->week_name,
+          'updated_at' => Carbon::now(),
+        ];
+
+        Week::where('id',$request->id)->update($insert_data);
+        return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+
+     }
+
+     public function editWeek($id){
+        $week = Week::find($id);
+        $temp_data = $week->toArray();
+         $temp_data['start_date'] = date('m-d-Y',strtotime($temp_data['start_date']));
+         $temp_data['end_date'] = date('m-d-Y',strtotime($temp_data['end_date']));
+
+         return Response::json($temp_data);
+
+     }
+
+    public function contacts(){
+        $contacts = Contact::orderBy('created_at','desc')->get();
+        $page = 'contact';
+//        dd($contacts);
+        return view('tutor.contact.showcontact', compact('page','contacts'));
+    }
+
+    public function showWeekReport($id){
+        $week = Week::find($id);
+        $contactData= Contact::orderBy('created_at','asc')->get();
+        $weeks = Week::orderBy('created_at','asc')->get();
+//       dd($contactData);
+//       $data= DailyWorkReport::where('contact_id',$id)->get();
+//       $courseData= Course::where('contact_id',$id)->get();
+        //DailyWorkReport::all();
+        //dd($id);
+
+        return view('tutor.daily-work.weekly_student_details',compact('contactData','weeks','week'));
+
+    }
+
+
+    public function addNewContact(Request $request){
+        $temp_data = $request->all();
+        unset($temp_data['_token']);
+        $temp_data['created_at'] = Carbon::now();
+        $insert = Contact::insert($temp_data);
+
+        if($insert){
+            return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+        }
+    }
+
+    public function deleteContact($id){
+        $item = Contact::find($id);
+        $item->delete();
+        return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+    }
+
+    public function paymentHistory(){
+        $contactData= Contact::orderBy('created_at','asc')->get();
+        $weeks = Week::orderBy('created_at','asc')->get();
+        $student_daily_pays = StudentDailyPayHistory::orderBy('created_at','desc')->get();
+        $course_pays = StudentCoursePayHistory::orderBy('created_at','desc')->get();
+
+        return view('tutor.daily-work.paymenthistory',compact('contactData','weeks','student_daily_pays','course_pays'));
+    }
+}
