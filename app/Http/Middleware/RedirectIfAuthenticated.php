@@ -18,7 +18,15 @@ class RedirectIfAuthenticated
     public function handle($request, Closure $next, $guard = null)
     {
         if (Auth::guard($guard)->check()) {
-            return redirect('/daily-work-entry/show');
+            if(Auth::user()->role == 'admin')
+            {
+                return redirect()->intended('/daily-work-entry/show');
+            }
+
+            if(Auth::user()->role == 'tutor')
+            {
+                return redirect()->intended('dashboard');
+            }
         }
 
         return $next($request);

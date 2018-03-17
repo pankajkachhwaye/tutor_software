@@ -90,66 +90,103 @@
 
 <div class="container-fluid">
     <div id="demo-5" class="row-fluid">
-
+        <!-- <h1 class="clearfix text-center heading-4"></h1>-->
         <div class="row-fluid">
             <div class="col-md-12">
-            <div style="background: white;padding: 20px;">
-                <h1>Student Payment Daily Work</h1>
-                <div class="table-responsive">
-                    <table class="table datatable">
-                        <thead>
-                        <tr>
-                            <th>S.no.</th>
-                            <th>Student Name</th>
-                            <th>Paid Ammount</th>
-                            <th>User Name</th>
-                            <th>Phone No</th>
-                            <th>Date of Payment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($student_daily_pays as $keypay => $valuepay)
-                            <tr>
-                                <td>{{$keypay+1}}</td>
-                                <td>{{$valuepay->student_name}}</td>
-                                <td>{{$valuepay->paid_amount}}</td>
-                                <td>{{$valuepay->name}}</td>
-                                <td>{{$valuepay->phone_no}}</td>
-                                <td>{{$valuepay->created_at}}</td>
-                            </tr>
-    `                   @endforeach
-                        </tbody>
-                    </table>
+                <div style="background: white;padding: 20px; ">
+                    @if(session('status') && session('status') == 400)
+                        <div class="row">
+                            <div class="alert alert-danger alert-dismissable ">
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <strong>Warning!</strong> {{session('message')}}
+                            </div>
+                        </div>
+                    @endif
+                        @if(session('status') && session('status') == 100)
+                            <div class="row">
+                                <div class="alert alert-success alert-dismissable">
+                                    <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                    <strong>Success!</strong> {{session('message')}}
+                                </div>
+                            </div>
+                        @endif
+                        <h1>Register New tutor</h1>
+                    <form class="form-horizontal" style="padding: 15px" method="post" action="{{url('/register-tutor')}}">
+                        {{csrf_field()}}
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Name</label><br/>
+                            <input type="text" name="name" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Email</label><br/>
+                            <input type="text" name="email" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Mobile number</label><br/>
+                            <input type="text" name="mobile" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Join Date</label><br/>
+                            <input type="text" name="join_date" class="form-control" id="datepicker">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Job Timming</label><br/>
+                            <input type="text" name="job_timming" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Subjects</label><br/>
+                            <input type="text" name="subjects" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <input type="submit"  value="Register" class="btn btn-primary">
+                        </div>
+                        </div>
+
+                    </form>
+                        <h1>All Register tutor</h1>
+                        <div class="table-responsive">
+                            <table class="table datatable">
+                                <thead>
+                                <tr>
+                                    <th>S.no.</th>
+                                    <th>Tutor Name</th>
+                                    <th>Email</th>
+                                    <th>Mobile Number</th>
+                                    <th>Join Date</th>
+                                    <th>Job Timming</th>
+                                    <th>Subjects</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($tutors as $keypay => $valuetutor)
+                                    <tr>
+                                        <td>{{$keypay+1}}</td>
+                                        <td>{{$valuetutor->name}}</td>
+                                        <td>{{$valuetutor->email}}</td>
+                                        <td>{{$valuetutor->mobile}}</td>
+                                        <td>{{$valuetutor->join_date}}</td>
+                                        <td>{{$valuetutor->job_timming}}</td>
+                                        <td>{{$valuetutor->subjects}}</td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    <div class="divider visible-phone"></div>
                 </div>
-                <h1>Student Payment Course</h1>
-                <div class="table-responsive">
-                    <table class="table datatable">
-                        <thead>
-                        <tr>
-                            <th>S.no.</th>
-                            <th>Student Name</th>
-                            <th>Paid Ammount</th>
-                            <th>User Name</th>
-                            <th>Phone No</th>
-                            <th>Date of Payment</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach($course_pays as $keypay => $valuepay)
-                            <tr>
-                                <td>{{$keypay+1}}</td>
-                                <td>{{$valuepay->student_name}}</td>
-                                <td>{{$valuepay->paid_amount}}</td>
-                                <td>{{$valuepay->name}}</td>
-                                <td>{{$valuepay->phone_no}}</td>
-                                <td>{{$valuepay->created_at}}</td>
-                            </tr>
-    `                   @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                <div class="divider visible-phone"></div>
-            </div>
             </div>
 
         </div>
@@ -716,6 +753,10 @@
     $(function () {
         $('.datatable').DataTable();
         $('.datepicker').datepicker({
+            autoclose: true,
+        });
+$('#datepicker').datepicker({
+    format:'d/mm/yyyy',
             autoclose: true,
         });
 

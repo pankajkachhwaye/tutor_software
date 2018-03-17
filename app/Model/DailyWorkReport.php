@@ -11,4 +11,6 @@ class DailyWorkReport extends Model
     public function scopeChunksOnWeek($query,$fromDate,$endDate){
         return $query->where('created_at','>=',$fromDate)->where('created_at','<=',$endDate);
     }
+
+//    public function scopeByUserName
 }

@@ -6,6 +6,7 @@ use App\Model\Contact;
 use App\Model\StudentCoursePayHistory;
 use App\Model\StudentDailyPayHistory;
 use App\Model\Week;
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -16,6 +17,7 @@ class AdminController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('admin');
     }
 
     public function index(){
@@ -23,9 +25,39 @@ class AdminController extends Controller
         return view('tutor.admin.dashboard', compact('page'));
     }
 
-    public function addWeek(Request $request){
-//        dd($request->all());
 
+    public function registerTutor(){
+        $tutors = User::where('role','tutor')->orderBy('created_at','desc')->get();
+        $contactData= Contact::orderBy('created_at','asc')->get();
+        $weeks = Week::orderBy('created_at','asc')->get();
+        return view('tutor.daily-work.registertutor',compact('contactData','weeks','tutors'));
+    }
+
+    public function addNewTutor(Request $request){
+        $check = User::UserByNameEmail($request->name,$request->email)->first();
+        if($check != null){
+            return back()->with('status', 400)->with('message', 'User already register with this name and email');
+        }
+        else{
+            $this->createUser($request);
+            return back()->with('status', 100)->with('message', 'User register successfully');
+        }
+    }
+
+    protected function createUser($request){
+        User::insert([
+           'name'=>$request->name,
+           'email'=>$request->email,
+           'mobile'=>$request->mobile,
+           'join_date'=>$request->join_date,
+           'job_timming'=>$request->job_timming,
+           'subjects'=>$request->subjects,
+           'password'=>bcrypt('123456'),
+           'role'=>'tutor',
+            'created_at' =>Carbon::now()
+        ]);
+    }
+    public function addWeek(Request $request){
         $start_date = date('Y-m-d',strtotime($request->start_date)).' '.'18:30:00';
         $end_date = date('Y-m-d',strtotime($request->end_date)).' '.'18:29:59';
         $insert_data = [

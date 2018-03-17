@@ -13,12 +13,14 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Response;
+use App\User;
 
 class DailyWorkController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('admin');
     }
 
     public function add($id){
@@ -53,13 +55,13 @@ class DailyWorkController extends Controller
 
     public function updateDailyWork(Request $request){
         $temp_data = $request->all();
-        $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
+//        $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
         $id = $temp_data['did'];
         $tutor_name = $temp_data['tutor_name'];
         $tutor_price = $temp_data['tutor_price'];
         unset($temp_data['_token']);
         unset($temp_data['did']);
-        $temp_data['remaining'] = $remaining;
+//        $temp_data['remaining'] = $remaining;
         $temp_data['tutor_name'] = json_encode($tutor_name);
         $temp_data['tutor_price'] = json_encode($tutor_price);
 //        $temp_data['created_at'] = Carbon::now();
@@ -75,15 +77,16 @@ class DailyWorkController extends Controller
     public function show()
     {
 
+        $temp = User::Select('name')->where('role','tutor')->get();
+        $users = [];
+        foreach ($temp as $user){
+            array_push($users,$user->name);
+        }
+
        $contactData= Contact::orderBy('created_at','asc')->get();
         $weeks = Week::orderBy('created_at','asc')->get();
-//       dd($contactData);
-//       $data= DailyWorkReport::where('contact_id',$id)->get();
-//       $courseData= Course::where('contact_id',$id)->get();
-       //DailyWorkReport::all();
-        //dd($id);
 
-        return view('tutor.daily-work.student_details',compact('contactData','weeks'));
+        return view('tutor.daily-work.student_details',compact('contactData','weeks','users'));
 
     }
 

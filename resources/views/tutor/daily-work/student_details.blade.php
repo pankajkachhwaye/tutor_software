@@ -4,6 +4,7 @@
 <head>
     <title>TUTOR | STUDENT'S DETAILS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="{{URL::asset('public/css/bootstrap.css')}}" rel="stylesheet"/>
     <link href="{{URL::asset('public/css/bootstrap.min.css')}}" rel="stylesheet"/>
     <link href="{{URL::asset('public/css/preview.min.css')}}" rel="stylesheet"/>
@@ -46,8 +47,16 @@
 <script type="text/javascript">
     var APP_URL = {!! json_encode(url('/')) !!}
     var token = '{!! csrf_token() !!}'
-
+    var users = [];
 </script>
+@if(isset($users))
+
+    <script type="text/javascript">
+     users = {!! json_encode($users) !!}
+    </script>
+
+
+@endif
 <div class="navbar navbar-fixed-top">
     <div class="navbar-inner">
         <div class="container-fluid">
@@ -68,6 +77,8 @@
                 <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal2" style="font-size:18px; color:grey; ">show Contact</a>
                 <i class="fa fa-money" style="font-size:24px;color:grey"></i>
                 <a href="{{url('payment-history')}}" style="font-size:18px; color:grey; ">Payment History</a>
+                <i class="fa fa-users" style="font-size:24px;color:grey"></i>
+                <a href="{{url('register-tutor')}}" style="font-size:18px; color:grey; ">Register Tutor</a>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
                         href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" style="font-size:18px; color:#FF0000; ">Logout</a>
@@ -106,6 +117,7 @@
                                     <h4>{{$valuecontact->user_name}}</h4>
                                     {{$valuecontact->phone_no}}</a></li>
                     @endforeach
+
                     {{--<li><a href="#panel5-2" data-toggle="tab">Phone 2</a></li>--}}
                     {{--<li><a href="#panel5-3" data-toggle="tab">Phone 3</a></li>--}}
                     <!--<li class="dropdown">
@@ -118,6 +130,8 @@
                             </li>-->
 
                     </ul>
+
+
 
                     <div class="tab-content">
                         @foreach($contactData as $keycontact => $valuecontact)
@@ -132,7 +146,10 @@
                                                         Activity</a></li>
                                                 <li><a href="#panel5-1-2{{$valuecontact->phone_no}}" data-toggle="tab">Courses</a></li>
                                                 <li><a href="#panel5-1-3{{$valuecontact->phone_no}}" data-toggle="tab">Payment Remaining</a></li>
+                                                <li><a href="#panel5-1-4{{$valuecontact->phone_no}}" data-toggle="tab">Tutor Payment Remaining</a></li>
                                             </ul>
+
+
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="panel5-1-1{{$valuecontact->phone_no}}">
                                                     <div style="overflow: auto; width:100%;">
@@ -373,7 +390,7 @@
                                                                     <td><input type="text" required name="due_time">
                                                                         <span>hh:mm</span>
                                                                     </td>
-                                                                    <td><input required type="text" name="tutor_name"></td>
+                                                                    <td><input required type="text" class="userssuggest" autocomplete="off" name="tutor_name"></td>
                                                                     <td><input required type="text" name="tutor_price"></td>
                                                                     <td><input type="text" name="comment"></td>
                                                                     <td><input type="submit" value="Save"></td>
@@ -564,7 +581,7 @@
                                                                     <td ><input type="text" required name="paid"></td>
                                                                     <td ><input type="text" id="idValue2" readonly  name="remaining"></td>
                                                                     <td><input type="text" required  name="next_due_date"></td>
-                                                                    <td ><input type="text" required name="tutor_name"></td>
+                                                                    <td ><input type="text" required class="userssuggest" name="tutor_name"></td>
                                                                     <td ><input type="text" required name="tutor_price"></td>
                                                                     <td ><input type="submit" value="Save"></td>
 
@@ -613,7 +630,7 @@
                                                                 </thead>
                                                                 <tbody>
                                                                 @php
-                                                                    $distict_student = $valuecontact->dailyWorkReport()->get()->groupBy('student_name');
+                                                                    $distict_student = $valuecontact->dailyWorkReport()->where('remaining', '<>' , '0')->get()->groupBy('student_name');
                                                                 $total = 0;
                                                                 @endphp
                                                                 @foreach($distict_student as $key => $student)
@@ -721,6 +738,129 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div id="panel5-1-4{{$valuecontact->phone_no}}" class="tab-pane">
+                                                    <div>
+                                                        <h3>Daily Work Tutor Payment</h3>
+                                                        <div style="overflow: auto; width: 100%;">
+                                                            <table class="datatable">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div align="center">Tutor Name</div>
+                                                                    </th>
+                                                                    <th>
+                                                                        <div align="center">Total</div>
+                                                                    </th>
+                                                                </tr>
+
+
+                                                                </thead>
+                                                                <tbody>
+                                                                @php
+                                                                    $distict_student = $valuecontact->dailyWorkReport()->get();
+                                                                    $unique_tutor = array();
+                                                                    foreach ($distict_student as $key_stu => $value_stu){
+                                                                    $decode_name = json_decode($value_stu->tutor_name);
+                                                                    $decode_price = json_decode($value_stu->tutor_price);
+                                                                    $explode_name = explode(",",$decode_name);
+                                                                    $explode_price = explode(",",$decode_price);
+
+                                                                        foreach ($explode_name as $key_name => $value_name){
+                                                                            if(array_key_exists($value_name,$unique_tutor)){
+                                                                                $price = $unique_tutor[$value_name];
+                                                                                $unique_tutor[$value_name] = $price + intval($explode_price[$key_name]);
+                                                                            }
+                                                                            else{
+                                                                                $unique_tutor[$value_name] =   intval($explode_price[$key_name]);
+                                                                            }
+
+                                                                        }
+                                                                           $total_tutor1 = 0;
+                                                                    }
+                                                                @endphp
+
+                                                                @foreach($unique_tutor as $key_name => $tutor_price)
+                                                                    @php
+                                                                        $total_tutor1 = $tutor_price + $total_tutor1
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{$key_name}}
+                                                                        </td>
+                                                                        <td>{{$tutor_price}}</td>
+
+                                                                    </tr>
+
+                                                                @endforeach
+
+                                                                </tbody>
+                                                            </table>
+                                                            <h4>Total Payment Remaining :- {{$total_tutor1}}</h4>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <h3>Tutor Course Payment Remaing</h3>
+                                                        <div style="overflow: auto; width: 100%;">
+
+                                                            <table class="datatable">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div align="center">Tutor Name</div>
+                                                                    </th>
+                                                                    <th>
+                                                                        <div align="center">Total</div>
+                                                                    </th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                @php
+                                                                    $distict_tutor_courses = $valuecontact->courses()->get();
+                                                                     $unique_tutor1 = array();
+                                                                    foreach ($distict_tutor_courses as $key_stu => $value_stu){
+                                                                    $decode_name = json_decode($value_stu->tutor_name);
+                                                                    $decode_price = json_decode($value_stu->tutor_price);
+                                                                    $explode_name = explode(",",$decode_name);
+                                                                    $explode_price = explode(",",$decode_price);
+
+                                                                        foreach ($explode_name as $key_name => $value_name){
+                                                                            if(array_key_exists($value_name,$unique_tutor1)){
+                                                                                $price = $unique_tutor1[$value_name];
+                                                                                $unique_tutor1[$value_name] = $price + intval($explode_price[$key_name]);
+                                                                            }
+                                                                            else{
+                                                                                $unique_tutor1[$value_name] =   intval($explode_price[$key_name]);
+                                                                            }
+
+                                                                        }
+                                                                           $total_course_tutor1 = 0;
+                                                                    }
+                                                                @endphp
+                                                                @foreach($unique_tutor1 as $key => $student)
+                                                                    @php
+                                                                 $total_course_tutor1 =  $total_course_tutor1 +  intval($student);
+                                                                    @endphp
+
+                                                                        <tr>
+                                                                            <td>
+                                                                                {{$key}}
+                                                                            </td>
+                                                                            <td>{{$student}}</td>
+                                                                        </tr>
+
+
+                                                                @endforeach
+
+                                                                </tbody>
+                                                            </table>
+                                                            <h4>Total Payment Remaining :- {{$total_course_tutor1}}</h4>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -904,7 +1044,7 @@
                                     </option>
                                     <option value="project">Project
                                     </option>
-                                    <option value="session">Session
+                                    <option value="quiz">Quiz
                                     </option>
 
                                 </select>
@@ -1062,6 +1202,8 @@
                                     <option value="assignment">Assignment
                                     </option>
                                     <option value="project">Project
+                                    </option>
+                                    <option value="session">Session
                                     </option>
                                     <option value="session">Session
                                     </option>
@@ -1281,6 +1423,9 @@
 {{--<script src="{{URL::asset('public/js/jquery.stickyheader.js')}}"></script>--}}
 <script src="{{URL::asset('public/js/bootstrap.min.js')}}"></script>
 <script src="{{URL::asset('public/js/tabs-addon.js')}}"></script>
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{{--<script src="{{//URL::asset('public/js/bootstrap-typeahead.js')}}"></script>--}}
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 {{--<script src="{{URL::asset('public/js/script.js')}}"></script>--}}
@@ -1297,6 +1442,75 @@
 
 <script type="text/javascript">
     $(function () {
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+        $( ".userssuggest" )
+        // don't navigate away from the field on tab when selecting an item
+            .on( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                    $( this ).autocomplete( "instance" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                minLength: 0,
+                source: function( request, response ) {
+                    // delegate back to autocomplete, but extract the last term
+                    response( $.ui.autocomplete.filter(
+                        users, extractLast( request.term ) ) );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+            });
+
+        // !function(source) {
+        //     function extractor(query) {
+        //         var result = /([^,]+)$/.exec(query);
+        //         if(result && result[1])
+        //             return result[1].trim();
+        //         return '';
+        //     }
+        //
+        //     $('.userssuggest').typeahead({
+        //         source: source,
+        //         updater: function(item) {
+        //             return this.$element.val().replace(/[^,]*$/,'')+item+',';
+        //         },
+        //         matcher: function (item) {
+        //             var tquery = extractor(this.query);
+        //             if(!tquery) return false;
+        //             return ~item.toLowerCase().indexOf(tquery.toLowerCase())
+        //         },
+        //         highlighter: function (item) {
+        //
+        //             var query = extractor(this.query).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
+        //             return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
+        //                 return '<strong>' + match + '</strong>'
+        //             })
+        //         }
+        //     });
+        //
+        // }(["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]);
+
+
+
         $('.datatable').DataTable();
         $('.datepicker').datepicker({
             autoclose: true,

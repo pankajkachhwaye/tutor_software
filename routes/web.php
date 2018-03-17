@@ -19,9 +19,15 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/tutor-dashboard','TutorController@tutorDashboard');
+Route::get('/show-week-report-tutor/{id}','TutorController@showWeekReportTutor');
+
+
 Route::group(['namespace' => 'Admin'], function () {
 
     Route::get('/payment-history','AdminController@paymentHistory');
+    Route::get('/register-tutor','AdminController@registerTutor');
+    Route::post('/register-tutor','AdminController@addNewTutor');
 
 
     Route::post('/add-new-contact','AdminController@addNewContact');

@@ -66,6 +66,8 @@
                 <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal" style="font-size:18px; color:grey; ">Add Contact</a>
                 <i class="fa fa-address-book" style="font-size:24px;color:grey"></i>
                 <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal2" style="font-size:18px; color:grey; ">show Contact</a>
+                <i class="fa fa-users" style="font-size:24px;color:grey"></i>
+                <a href="{{url('register-tutor')}}" style="font-size:18px; color:grey; ">Register Tutor</a>
                 <i class="fa fa-money" style="font-size:24px;color:grey"></i>
                 <a href="{{url('payment-history')}}" style="font-size:18px; color:grey; ">Payment History</a>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
@@ -133,6 +135,7 @@
                                                         Activity</a></li>
                                                 <li><a href="#panel5-1-2{{$valuecontact->phone_no}}" data-toggle="tab">Courses</a></li>
                                                 <li><a href="#panel5-1-3{{$valuecontact->phone_no}}" data-toggle="tab">Payment Remaining</a></li>
+                                                <li><a href="#panel5-1-4{{$valuecontact->phone_no}}" data-toggle="tab">Tutor Payment Remaining</a></li>
                                             </ul>
                                             <div class="tab-content">
                                                 <div class="tab-pane active" id="panel5-1-1{{$valuecontact->phone_no}}">
@@ -717,6 +720,129 @@
                                                         </div>
                                                     </div>
                                                 </div>
+                                                <div id="panel5-1-4{{$valuecontact->phone_no}}" class="tab-pane">
+                                                    <div>
+                                                        <h3>Daily Work Tutor Payment</h3>
+                                                        <div style="overflow: auto; width: 100%;">
+                                                            <table class="datatable">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div align="center">Tutor Name</div>
+                                                                    </th>
+                                                                    <th>
+                                                                        <div align="center">Total</div>
+                                                                    </th>
+                                                                </tr>
+
+
+                                                                </thead>
+                                                                <tbody>
+                                                                @php
+                                                                    $distict_student = $valuecontact->dailyWorkReport()->ChunksOnWeek($week->start_date,$week->end_date)->get();
+                                                                    $unique_tutor = array();
+                                                                    foreach ($distict_student as $key_stu => $value_stu){
+                                                                    $decode_name = json_decode($value_stu->tutor_name);
+                                                                    $decode_price = json_decode($value_stu->tutor_price);
+                                                                    $explode_name = explode(",",$decode_name);
+                                                                    $explode_price = explode(",",$decode_price);
+
+                                                                        foreach ($explode_name as $key_name => $value_name){
+                                                                            if(array_key_exists($value_name,$unique_tutor)){
+                                                                                $price = $unique_tutor[$value_name];
+                                                                                $unique_tutor[$value_name] = $price + intval($explode_price[$key_name]);
+                                                                            }
+                                                                            else{
+                                                                                $unique_tutor[$value_name] =   intval($explode_price[$key_name]);
+                                                                            }
+
+                                                                        }
+                                                                           $total_tutor1 = 0;
+                                                                    }
+                                                                @endphp
+
+                                                                @foreach($unique_tutor as $key_name => $tutor_price)
+                                                                    @php
+                                                                        $total_tutor1 = $tutor_price + $total_tutor1
+                                                                    @endphp
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{$key_name}}
+                                                                        </td>
+                                                                        <td>{{$tutor_price}}</td>
+
+                                                                    </tr>
+
+                                                                @endforeach
+
+                                                                </tbody>
+                                                            </table>
+                                                            <h4>Total Payment Remaining :- {{$total_tutor1}}</h4>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div>
+                                                        <h3>Tutor Course Payment Remaing</h3>
+                                                        <div style="overflow: auto; width: 100%;">
+
+                                                            <table class="datatable">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th>
+                                                                        <div align="center">Tutor Name</div>
+                                                                    </th>
+                                                                    <th>
+                                                                        <div align="center">Total</div>
+                                                                    </th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                @php
+                                                                    $distict_tutor_courses = $valuecontact->courses()->ChunksOnWeek($week->start_date,$week->end_date)->get();
+                                                                     $unique_tutor1 = array();
+                                                                    foreach ($distict_tutor_courses as $key_stu => $value_stu){
+                                                                    $decode_name = json_decode($value_stu->tutor_name);
+                                                                    $decode_price = json_decode($value_stu->tutor_price);
+                                                                    $explode_name = explode(",",$decode_name);
+                                                                    $explode_price = explode(",",$decode_price);
+
+                                                                        foreach ($explode_name as $key_name => $value_name){
+                                                                            if(array_key_exists($value_name,$unique_tutor1)){
+                                                                                $price = $unique_tutor1[$value_name];
+                                                                                $unique_tutor1[$value_name] = $price + intval($explode_price[$key_name]);
+                                                                            }
+                                                                            else{
+                                                                                $unique_tutor1[$value_name] =   intval($explode_price[$key_name]);
+                                                                            }
+
+                                                                        }
+                                                                           $total_course_tutor1 = 0;
+                                                                    }
+                                                                @endphp
+                                                                @foreach($unique_tutor1 as $key => $student)
+                                                                    @php
+                                                                        $total_course_tutor1 =  $total_course_tutor1 +  intval($student);
+                                                                    @endphp
+
+                                                                    <tr>
+                                                                        <td>
+                                                                            {{$key}}
+                                                                        </td>
+                                                                        <td>{{$student}}</td>
+                                                                    </tr>
+
+
+                                                                @endforeach
+
+                                                                </tbody>
+                                                            </table>
+                                                            <h4>Total Payment Remaining :- {{$total_course_tutor1}}</h4>
+
+                                                        </div>
+                                                    </div>
+                                                </div>
+
                                             </div>
                                         </div>
                                     </div>
