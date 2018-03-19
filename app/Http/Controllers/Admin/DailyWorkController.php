@@ -76,7 +76,6 @@ class DailyWorkController extends Controller
 
     public function show()
     {
-
         $temp = User::Select('name')->where('role','tutor')->get();
         $users = [];
         foreach ($temp as $user){

@@ -4,6 +4,7 @@
 <head>
     <title>TUTOR | STUDENT'S DETAILS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <link href="{{URL::asset('public/css/bootstrap.css')}}" rel="stylesheet"/>
     <link href="{{URL::asset('public/css/bootstrap.min.css')}}" rel="stylesheet"/>
     <link href="{{URL::asset('public/css/preview.min.css')}}" rel="stylesheet"/>
@@ -373,7 +374,7 @@
                                                                     <td><input type="text" required name="due_time">
                                                                         <span>hh:mm</span>
                                                                     </td>
-                                                                    <td><input required type="text" name="tutor_name"></td>
+                                                                    <td><input required type="text" class="userssuggest" autocomplete="off" name="tutor_name"></td>
                                                                     <td><input required type="text" name="tutor_price"></td>
                                                                     <td><input type="text" name="comment"></td>
                                                                     <td><input type="submit" value="Save"></td>
@@ -564,7 +565,7 @@
                                                                     <td ><input type="text" required name="paid"></td>
                                                                     <td ><input type="text" id="idValue2" readonly  name="remaining"></td>
                                                                     <td><input type="text" required  name="next_due_date"></td>
-                                                                    <td ><input type="text" required name="tutor_name"></td>
+                                                                    <td ><input type="text" required class="userssuggest" name="tutor_name" name="tutor_name"></td>
                                                                     <td ><input type="text" required name="tutor_price"></td>
                                                                     <td ><input type="submit" value="Save"></td>
 
@@ -1399,13 +1400,14 @@
 
 </div>
 
-{{--<script src="{{URL::asset('public/js/jquery-1.9.1.min.js')}}"></script>--}}
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="{{URL::asset('public/js/jquery-1.9.1.min.js')}}"></script>
+{{--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
 {{--<script src="{{URL::asset('public/js/jquery.stickyheader.js')}}"></script>--}}
 <script src="{{URL::asset('public/js/bootstrap.min.js')}}"></script>
 <script src="{{URL::asset('public/js/tabs-addon.js')}}"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.16/js/dataTables.bootstrap.min.js"></script>
 {{--<script src="{{URL::asset('public/js/script.js')}}"></script>--}}
@@ -1422,6 +1424,44 @@
 
 <script type="text/javascript">
     $(function () {
+
+        function split( val ) {
+            return val.split( /,\s*/ );
+        }
+        function extractLast( term ) {
+            return split( term ).pop();
+        }
+        $( ".userssuggest" )
+        // don't navigate away from the field on tab when selecting an item
+            .on( "keydown", function( event ) {
+                if ( event.keyCode === $.ui.keyCode.TAB &&
+                    $( this ).autocomplete( "instance" ).menu.active ) {
+                    event.preventDefault();
+                }
+            })
+            .autocomplete({
+                minLength: 0,
+                source: function( request, response ) {
+                    // delegate back to autocomplete, but extract the last term
+                    response( $.ui.autocomplete.filter(
+                        users, extractLast( request.term ) ) );
+                },
+                focus: function() {
+                    // prevent value inserted on focus
+                    return false;
+                },
+                select: function( event, ui ) {
+                    var terms = split( this.value );
+                    // remove the current input
+                    terms.pop();
+                    // add the selected item
+                    terms.push( ui.item.value );
+                    // add placeholder to get the comma-and-space at the end
+                    terms.push( "" );
+                    this.value = terms.join( ", " );
+                    return false;
+                }
+            });
         $('.datatable').DataTable();
         $('.datepicker').datepicker({
             autoclose: true,

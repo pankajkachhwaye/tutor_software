@@ -1416,14 +1416,14 @@
     </div>
 </div>
 
-{{--<script src="{{URL::asset('public/js/jquery-1.9.1.min.js')}}"></script>--}}
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="{{URL::asset('public/js/jquery-1.9.1.min.js')}}"></script>
+{{--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>--}}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.20.1/moment.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.js"></script>
 {{--<script src="{{URL::asset('public/js/jquery.stickyheader.js')}}"></script>--}}
 <script src="{{URL::asset('public/js/bootstrap.min.js')}}"></script>
 <script src="{{URL::asset('public/js/tabs-addon.js')}}"></script>
-<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+{{--<script src="https://code.jquery.com/jquery-1.12.4.js"></script>--}}
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 {{--<script src="{{//URL::asset('public/js/bootstrap-typeahead.js')}}"></script>--}}
 <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
@@ -1480,34 +1480,6 @@
                 }
             });
 
-        // !function(source) {
-        //     function extractor(query) {
-        //         var result = /([^,]+)$/.exec(query);
-        //         if(result && result[1])
-        //             return result[1].trim();
-        //         return '';
-        //     }
-        //
-        //     $('.userssuggest').typeahead({
-        //         source: source,
-        //         updater: function(item) {
-        //             return this.$element.val().replace(/[^,]*$/,'')+item+',';
-        //         },
-        //         matcher: function (item) {
-        //             var tquery = extractor(this.query);
-        //             if(!tquery) return false;
-        //             return ~item.toLowerCase().indexOf(tquery.toLowerCase())
-        //         },
-        //         highlighter: function (item) {
-        //
-        //             var query = extractor(this.query).replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&')
-        //             return item.replace(new RegExp('(' + query + ')', 'ig'), function ($1, match) {
-        //                 return '<strong>' + match + '</strong>'
-        //             })
-        //         }
-        //     });
-        //
-        // }(["Alabama","Alaska","Arizona","Arkansas","California","Colorado","Connecticut","Delaware","Florida","Georgia","Hawaii","Idaho","Illinois","Indiana","Iowa","Kansas","Kentucky","Louisiana","Maine","Maryland","Massachusetts","Michigan","Minnesota","Mississippi","Missouri","Montana","Nebraska","Nevada","New Hampshire","New Jersey","New Mexico","New York","North Dakota","North Carolina","Ohio","Oklahoma","Oregon","Pennsylvania","Rhode Island","South Carolina","South Dakota","Tennessee","Texas","Utah","Vermont","Virginia","Washington","West Virginia","Wisconsin","Wyoming"]);
 
 
 
@@ -1516,7 +1488,7 @@
             autoclose: true,
         });
 
-        $.fn.modal.Constructor.prototype.enforceFocus = function() {};
+        // $.fn.modal.Constructor.prototype.enforceFocus = function() {};
         $(document).on('click','#editWeek',function () {
             var id = $(this).attr('data-react-id');
             $.ajax({
