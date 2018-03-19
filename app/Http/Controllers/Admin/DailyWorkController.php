@@ -30,47 +30,76 @@ class DailyWorkController extends Controller
 
     public function createDailyWork(Request $request){
 
-        $temp_data = $request->all();
-//        dd($temp_data);
-        $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
-        $tutor_name = $temp_data['tutor_name'];
-        $tutor_price = $temp_data['tutor_price'];
-        $request_hash = $temp_data['redirect_hash'];
-        unset($temp_data['redirect_hash']);
-        unset($temp_data['_token']);
-        unset($temp_data['counter']);
-        $temp_data['remaining'] = $remaining;
-        $temp_data['tutor_name'] = json_encode($tutor_name);
-        $temp_data['tutor_price'] = json_encode($tutor_price);
-        $temp_data['created_at'] = Carbon::now();
-        $insert = DailyWorkReport::insert($temp_data);
+        $validate = $this->validateRequest($request);
+        if(count($validate) > 0){
+            $message = implode(',', $validate);
 
-
-
-        if($insert){
-            return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            return redirect('daily-work-entry/show'.'#'.$request->redirect_hash)->with('returnStatus', true)->with('status', 101)->with('message', $message);
         }
+        else{
+            $temp_data = $request->all();
+            $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
+            $tutor_name = $temp_data['tutor_name'];
+            $tutor_price = $temp_data['tutor_price'];
+            $request_hash = $temp_data['redirect_hash'];
+            unset($temp_data['redirect_hash']);
+            unset($temp_data['_token']);
+            unset($temp_data['counter']);
+            $temp_data['remaining'] = $remaining;
+            $temp_data['tutor_name'] = json_encode($tutor_name);
+            $temp_data['tutor_price'] = json_encode($tutor_price);
+            $temp_data['created_at'] = Carbon::now();
+            $insert = DailyWorkReport::insert($temp_data);
+            if($insert){
+                return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            }
+        }
+
+    }
+
+    public function validateRequest($request){
+        $returnArray = [];
+        $last_chr = substr($request->tutor_name, -1);
+        if(preg_match('/[\'^£$%&*()}{@#~?><>|=_+¬-]/', $request->tutor_name) || preg_match('/[\'^£$%&*()}{@#~?><>|=_+¬-]/', $request->tutor_price)){
+            array_push($returnArray,'No Special Character are allowed in Tutor Price and Tutor Name');
+
+        }
+
+       if (preg_match('([a-zA-Z])',$request->tutor_price)){
+            array_push($returnArray,'No Letters are allowed in Tutor Price');
+        }
+       if ($last_chr == ','){
+            array_push($returnArray,'Tutor Name has an extra comma please remove');
+        }
+        return $returnArray;
     }
 
 
     public function updateDailyWork(Request $request){
-        $temp_data = $request->all();
+        $validate = $this->validateRequest($request);
+        if(count($validate) > 0){
+            $message = implode(',', $validate);
+
+            return redirect('daily-work-entry/show'.'#'.$request->redirect_hash)->with('returnStatus', true)->with('status', 101)->with('message', $message);
+        }
+        else {
+            $temp_data = $request->all();
 //        $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
-        $id = $temp_data['did'];
-        $tutor_name = $temp_data['tutor_name'];
-        $tutor_price = $temp_data['tutor_price'];
-        unset($temp_data['_token']);
-        unset($temp_data['did']);
+            $id = $temp_data['did'];
+            $tutor_name = $temp_data['tutor_name'];
+            $tutor_price = $temp_data['tutor_price'];
+            unset($temp_data['_token']);
+            unset($temp_data['did']);
 //        $temp_data['remaining'] = $remaining;
-        $temp_data['tutor_name'] = json_encode($tutor_name);
-        $temp_data['tutor_price'] = json_encode($tutor_price);
+            $temp_data['tutor_name'] = json_encode($tutor_name);
+            $temp_data['tutor_price'] = json_encode($tutor_price);
 //        $temp_data['created_at'] = Carbon::now();
-        $insert = DailyWorkReport::where('id',$id)->update($temp_data);
+            $insert = DailyWorkReport::where('id', $id)->update($temp_data);
 
 
-
-        if($insert){
-            return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            if ($insert) {
+                return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            }
         }
     }
 
@@ -92,45 +121,59 @@ class DailyWorkController extends Controller
     public function createCourse(Request $request )
     {
 
-        //         dd($request->all());
-        $temp_data = $request->all();
-        $tutor_name = $temp_data['tutor_name'];
-        $tutor_price = $temp_data['tutor_price'];
-        $request_hash = $temp_data['redirect_hash'];
-        unset($temp_data['redirect_hash']);
-        unset($temp_data['_token']);
-        unset($temp_data['counter']);
-        $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
-        $temp_data['remaining'] = $remaining;
-        $temp_data['tutor_name'] = json_encode($tutor_name);
-        $temp_data['tutor_price'] = json_encode($tutor_price);
-        $temp_data['created_at'] = Carbon::now();
-        $insert = Course::insert($temp_data);
+        $validate = $this->validateRequest($request);
+        if(count($validate) > 0){
+            $message = implode(',', $validate);
 
-        if($insert){
-            return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            return back()->with('returnStatus', true)->with('status', 101)->with('message', $message);
+        }
+        else {
+            $temp_data = $request->all();
+            $tutor_name = $temp_data['tutor_name'];
+            $tutor_price = $temp_data['tutor_price'];
+            $request_hash = $temp_data['redirect_hash'];
+            unset($temp_data['redirect_hash']);
+            unset($temp_data['_token']);
+            unset($temp_data['counter']);
+            $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
+            $temp_data['remaining'] = $remaining;
+            $temp_data['tutor_name'] = json_encode($tutor_name);
+            $temp_data['tutor_price'] = json_encode($tutor_price);
+            $temp_data['created_at'] = Carbon::now();
+            $insert = Course::insert($temp_data);
+
+            if ($insert) {
+                return redirect('daily-work-entry/show' . '#' . $request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            }
         }
     }
 
     public function updateCourse(Request $request )
     {
 
-        //         dd($request->all());
-        $temp_data = $request->all();
-        $id = $temp_data['cid'];
-        $tutor_name = $temp_data['tutor_name'];
-        $tutor_price = $temp_data['tutor_price'];
-        unset($temp_data['_token']);
-        unset($temp_data['cid']);
-        $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
-        $temp_data['remaining'] = $remaining;
-        $temp_data['tutor_name'] = json_encode($tutor_name);
-        $temp_data['tutor_price'] = json_encode($tutor_price);
+        $validate = $this->validateRequest($request);
+        if(count($validate) > 0){
+            $message = implode(',', $validate);
 
-        $insert = Course::where('id',$id)->update($temp_data);
+            return back()->with('returnStatus', true)->with('status', 101)->with('message', $message);
+        }
+        else {
+            $temp_data = $request->all();
+            $id = $temp_data['cid'];
+            $tutor_name = $temp_data['tutor_name'];
+            $tutor_price = $temp_data['tutor_price'];
+            unset($temp_data['_token']);
+            unset($temp_data['cid']);
+            $remaining = intval($temp_data['price']) - intval($temp_data['paid']);
+            $temp_data['remaining'] = $remaining;
+            $temp_data['tutor_name'] = json_encode($tutor_name);
+            $temp_data['tutor_price'] = json_encode($tutor_price);
 
-        if($insert){
-            return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            $insert = Course::where('id', $id)->update($temp_data);
+
+            if ($insert) {
+                return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            }
         }
     }
 
