@@ -17,6 +17,17 @@ Route::get('/', function () {
 
 Auth::routes();
 
+Route::get('/test',function (){
+
+    Mail::to('pankajkachhwaye@gmail.com')->send(new \App\Mail\TestMail());
+    if (Mail::failures()) {
+   dd(Mail::failures());
+    }
+
+    // otherwise everything is okay ...
+   dd(Mail::failures());
+});
+
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/tutor-dashboard','TutorController@tutorDashboard');
@@ -30,13 +41,16 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('/register-tutor','AdminController@addNewTutor');
 
 
+    Route::get('/all-semesters','AdminController@allSemesters');
+    Route::get('/show-semester-data/{semester_id}','AdminController@showSemesterData');
+    Route::post('/add-new-semester','AdminController@addNewSemester');
     Route::post('/add-new-contact','AdminController@addNewContact');
     Route::post('/add-week','AdminController@addWeek');
     Route::post('/update-week','AdminController@updateWeek');
     Route::get('/edit-week/{id}','AdminController@editWeek');
         Route::get('/show-week-report/{id}','AdminController@showWeekReport');
         Route::get('/dashboard','AdminController@index');
-        Route::get('/contact','AdminController@contacts');
+//        Route::get('/contact','AdminController@contacts');
         Route::get('/delete-contact/{id}','AdminController@deleteContact');
 
         Route::group(['prefix' => 'daily-work-entry'], function () {

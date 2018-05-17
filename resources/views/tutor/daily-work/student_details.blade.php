@@ -41,6 +41,11 @@
         #idValue2:hover{
             cursor: not-allowed;
         }
+        .ui-autocomplete { z-index:2147483647; }
+		.modal-body{
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
     </style>
 </head>
 <body class=" ">
@@ -1093,7 +1098,7 @@
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Tutor Name</label><br/>
-                                <input type="text" name="tutor_name" id="dtutor_name" class="form-control">
+                                <input type="text" name="tutor_name" id="dtutor_name" class="form-control userssuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">
@@ -1248,7 +1253,7 @@
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Tutor Name</label><br/>
-                                <input type="text" name="tutor_name" id="ctutor_name" class="form-control">
+                                <input type="text" name="tutor_name" id="ctutor_name" class="form-control userssuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">

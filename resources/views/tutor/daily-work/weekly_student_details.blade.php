@@ -41,6 +41,11 @@
         #idValue2:hover{
             cursor: not-allowed;
         }
+        .ui-autocomplete { z-index:2147483647; }
+		.modal-body{
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+}
     </style>
 </head>
 <body class=" ">
@@ -742,6 +747,7 @@
                                                                 @php
                                                                     $distict_student = $valuecontact->dailyWorkReport()->ChunksOnWeek($week->start_date,$week->end_date)->get();
                                                                     $unique_tutor = array();
+                                                                     $total_tutor1 = 0;
                                                                     foreach ($distict_student as $key_stu => $value_stu){
                                                                     $decode_name = json_decode($value_stu->tutor_name);
                                                                     $decode_price = json_decode($value_stu->tutor_price);
@@ -778,6 +784,12 @@
 
                                                                 </tbody>
                                                             </table>
+                                                            @if(isset($total_tutor1))
+                                                                $total_tutor1 = $total_tutor1
+                                                                @else
+                                                                $total_tutor1 = 0
+                                                                @endif
+
                                                             <h4>Total Payment Remaining :- {{$total_tutor1}}</h4>
 
                                                         </div>
@@ -802,6 +814,7 @@
                                                                 @php
                                                                     $distict_tutor_courses = $valuecontact->courses()->ChunksOnWeek($week->start_date,$week->end_date)->get();
                                                                      $unique_tutor1 = array();
+                                                                     $total_course_tutor1 = 0;
                                                                     foreach ($distict_tutor_courses as $key_stu => $value_stu){
                                                                     $decode_name = json_decode($value_stu->tutor_name);
                                                                     $decode_price = json_decode($value_stu->tutor_price);
@@ -838,6 +851,11 @@
 
                                                                 </tbody>
                                                             </table>
+                                                            @if(isset($total_course_tutor1))
+                                                                $total_course_tutor1 = $total_course_tutor1
+                                                            @else
+                                                                $total_course_tutor1 = 0
+                                                                @endif
                                                             <h4>Total Payment Remaining :- {{$total_course_tutor1}}</h4>
 
                                                         </div>
@@ -1079,7 +1097,7 @@
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Tutor Price</label><br/>
-                                <input type="text" name="tutor_price" id="dtutor_price" class="form-control">
+                                <input type="text" name="tutor_price" id="dtutor_price" class="form-control userssuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">
@@ -1226,7 +1244,7 @@
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Tutor Name</label><br/>
-                                <input type="text" name="tutor_name" id="ctutor_name" class="form-control">
+                                <input type="text" name="tutor_name" id="ctutor_name" class="form-control userssuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">

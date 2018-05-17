@@ -6,12 +6,14 @@ use App\Model\DailyWorkReport;
 
 use App\Model\Course;
 use App\Model\Contact;
+use App\Model\Semester;
 use App\Model\StudentCoursePayHistory;
 use App\Model\StudentDailyPayHistory;
 use App\Model\Week;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 use Response;
 use App\User;
 
@@ -71,6 +73,13 @@ class DailyWorkController extends Controller
        if ($last_chr == ','){
             array_push($returnArray,'Tutor Name has an extra comma please remove');
         }
+        $explode_name = explode(",",$request->tutor_name);
+        $explode_price = explode(",",$request->tutor_price);
+
+        if(count($explode_name) != count($explode_price)){
+            array_push($returnArray,'Tutor Name and Tutor price are mismatched please correct the error');
+        }
+
         return $returnArray;
     }
 
@@ -105,14 +114,18 @@ class DailyWorkController extends Controller
 
     public function show()
     {
+
         $temp = User::Select('name')->where('role','tutor')->get();
         $users = [];
         foreach ($temp as $user){
             array_push($users,$user->name);
         }
-
-       $contactData= Contact::orderBy('created_at','asc')->get();
-        $weeks = Week::orderBy('created_at','asc')->get();
+        $semester_id = Semester::find(Session::get('semester_id'));
+           if($semester_id == null){
+               return redirect('all-semesters')->with('returnStatus', true)->with('status', 101)->with('message', 'Please select semester');
+           }
+       $contactData= $semester_id->contacts()->orderBy('created_at','asc')->get();
+        $weeks = $semester_id->weeks()->orderBy('created_at','asc')->get();
 
         return view('tutor.daily-work.student_details',compact('contactData','weeks','users'));
 

@@ -60,7 +60,7 @@ class LoginController extends Controller
 
             if(Auth::user()->role == 'admin')
             {
-                return redirect()->intended('/daily-work-entry/show');
+                return redirect()->intended('/all-semesters');
             }
 
             if(Auth::user()->role == 'tutor')

@@ -1,4 +1,5 @@
 $(function () {
+
     if(status == 101){
         $.notify({
                 message: message
