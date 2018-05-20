@@ -31,7 +31,9 @@ Route::get('/test',function (){
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/tutor-dashboard','TutorController@tutorDashboard');
+Route::get('/tutor-all-semester','TutorController@tutorAllSemester');
 Route::get('/show-week-report-tutor/{id}','TutorController@showWeekReportTutor');
+Route::get('/show-tutor-dashboard/{semester_id}','TutorController@showTutorDashboard');
 
 
 Route::group(['namespace' => 'Admin'], function () {
@@ -42,6 +44,7 @@ Route::group(['namespace' => 'Admin'], function () {
 
 
     Route::get('/all-semesters','AdminController@allSemesters');
+    Route::post('/change-admin-credentials','AdminController@changeCdminCredentials');
     Route::get('/show-semester-data/{semester_id}','AdminController@showSemesterData');
     Route::post('/add-new-semester','AdminController@addNewSemester');
     Route::post('/add-new-contact','AdminController@addNewContact');

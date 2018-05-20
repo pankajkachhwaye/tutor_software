@@ -65,7 +65,7 @@ class LoginController extends Controller
 
             if(Auth::user()->role == 'tutor')
             {
-                return redirect()->intended('/tutor-dashboard');
+                return redirect()->intended('/tutor-all-semester');
             }
 
          }

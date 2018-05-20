@@ -11,6 +11,8 @@ use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use Response;
 
@@ -20,6 +22,17 @@ class AdminController extends Controller
     {
         $this->middleware('auth');
         $this->middleware('admin');
+    }
+
+    public function changeCdminCredentials(Request $request){
+        $id = Auth::user()->id;
+        $temp_data = $request->all();
+        unset($temp_data['password_confirm']);
+        unset($temp_data['_token']);
+        $temp_data['password'] = Hash::make($temp_data['password']);
+
+        User::find($id)->update($temp_data);
+        return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Admin Credentials Update successfully');
     }
 
     public function allSemesters(){

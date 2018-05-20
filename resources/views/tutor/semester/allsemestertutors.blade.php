@@ -75,13 +75,6 @@
             </a>
             <div class="brand pull-left">TUTOR | STUDENT'S DETAILS</div>
             <div class="brand pull-right">
-                <i class="fa fa-dashboard" style="font-size:24px;color:grey"></i>
-                <a href="{{url('all-semesters')}}" style="font-size:18px; color:grey; ">Home</a>
-                <i class="fa fa-calendar" style="font-size:24px;color:grey"></i>
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalSemester" style="font-size:18px; color:grey; ">Add Semester</a>
-                <i class="fa fa-key" style="font-size:24px;color:grey"></i>
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#changeCredentials" style="font-size:18px; color:grey; ">Change Admin Credentials</a>
-                <i class="fa fa-address-book-o" style="font-size:24px;color:grey"></i>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
                         href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" style="font-size:18px; color:#FF0000; ">Logout</a>
@@ -124,7 +117,7 @@
                                     <tr>
                                         <td>{{$keyweek+1}}</td>
                                         <td>{{$valueweek->semester_name}}</td>
-                                        <td><a href="{{url('show-semester-data'.'/'.$valueweek->id)}}" class="btn btn-success">Show</a>
+                                        <td><a href="{{url('show-tutor-dashboard'.'/'.$valueweek->id)}}" class="btn btn-success">Show</a>
                                             <a href="javascript:void(0)" data-react-id="{{$valueweek->id}}" id="editWeek" class="btn btn-primary">Edit</a></td>
 
                                     </tr>
@@ -173,45 +166,6 @@
 
     </div>
 
-    <div class="modal fade" id="changeCredentials" role="dialog">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title">Change Admin Credentials</h4>
-                </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" style="padding: 15px" method="post" action="{{url('/change-admin-credentials')}}">
-                        {{csrf_field()}}
-                        <div class="form-group" >
-                            <label for="contact">Email</label><br/>
-                            <input type="email" name="email" required class="form-control">
-                        </div>
-                        <div class="form-group" >
-                        <label for="password">Password</label><br/>
-                        <input name="password" required="required" type="password" id="password" class="form-control"/>
-                        </div>
-                        <div class="form-group" >
-                        <label for="password_confirm">Confirm Password</label><br/>
-                        <input name="password_confirm" required="required" type="password" id="password_confirm" class="form-control" oninput="check(this)" />
-                        </div>
-                        <div class="form-group" >
-                            <input type="submit"  value="Save" class="btn btn-primary">
-                        </div>
-
-                    </form>
-                </div>
-
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-        <div class="divider x-large"></div>
-        <div class="divider large"></div>
-
-    </div>
-
 
 </div>
 
@@ -241,15 +195,6 @@
 
 
 <script type="text/javascript">
-
-        function check(input) {
-            if (input.value != document.getElementById('password').value) {
-                input.setCustomValidity('Password Must be Matching.');
-            } else {
-                // input is valid -- reset the error message
-                input.setCustomValidity('');
-            }
-        }
 
 </script>
 

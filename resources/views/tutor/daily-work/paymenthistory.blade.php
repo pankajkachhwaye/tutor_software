@@ -56,7 +56,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </a>
-            <div class="brand pull-left">TUTOR | STUDENT'S DETAILS</div>
+            <div class="brand pull-left"><a href="{{url('all-semesters')}}">TUTOR | STUDENT'S DETAILS</a></div>
             <div class="brand pull-right">
                 <i class="fa fa-dashboard" style="font-size:24px;color:grey"></i>
                 <a href="{{url('daily-work-entry/show')}}" style="font-size:18px; color:grey; ">Home</a>
