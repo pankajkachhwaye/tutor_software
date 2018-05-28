@@ -767,6 +767,8 @@
                                                                 @php
                                                                     $distict_student = $valuecontact->dailyWorkReport()->get();
                                                                     $unique_tutor = array();
+                                                                      $total_tutor1 = 0;
+
                                                                     foreach ($distict_student as $key_stu => $value_stu){
                                                                     $decode_name = json_decode($value_stu->tutor_name);
                                                                     $decode_price = json_decode($value_stu->tutor_price);
@@ -827,6 +829,7 @@
                                                                 @php
                                                                     $distict_tutor_courses = $valuecontact->courses()->get();
                                                                      $unique_tutor1 = array();
+                                                                     $total_course_tutor1 = 0;
                                                                     foreach ($distict_tutor_courses as $key_stu => $value_stu){
                                                                     $decode_name = json_decode($value_stu->tutor_name);
                                                                     $decode_price = json_decode($value_stu->tutor_price);

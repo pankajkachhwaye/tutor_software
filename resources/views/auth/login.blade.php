@@ -11,6 +11,44 @@
     <!--webfonts-->
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900' rel='stylesheet' type='text/css'>
     <!--/webfonts-->
+    <script src="{{URL::asset('public/js/particles.js')}}"></script>
+    <script src="{{URL::asset('public/js/stat.js')}}"></script>
+    <style type="text/css">
+
+        .count-particles{
+            background: #000022;
+            position: absolute;
+            top: 48px;
+            left: 0;
+            width: 80px;
+            color: #13E8E9;
+            font-size: .8em;
+            text-align: left;
+            text-indent: 4px;
+            line-height: 14px;
+            padding-bottom: 2px;
+            font-family: Helvetica, Arial, sans-serif;
+            font-weight: bold;
+        }
+
+        .js-count-particles{
+            font-size: 1.1em;
+        }
+
+        #stats,
+        .count-particles{
+            -webkit-user-select: none;
+        }
+
+        #stats{
+            border-radius: 3px 3px 0 0;
+            overflow: hidden;
+        }
+
+        .count-particles{
+            border-radius: 0 0 3px 3px;
+        }
+    </style>
 </head>
 <body>
 <!--start-main-->
@@ -45,6 +83,29 @@
 <div class="copy-right">
     <p>Design by : <a href="http://aquadsoft.com/" target="_blank">Aquadsoft</a></p>
 </div>
-<!--//end-copyright-->
+<div id="particles-js"></div>
+<script type="text/javascript">
+    particlesJS.load('particles-js', 'particles.json', function() {
+        console.log('callback - particles.js config loaded');
+    });
+    var count_particles, stats, update;
+    stats = new Stats;
+    stats.setMode(0);
+    stats.domElement.style.position = 'absolute';
+    stats.domElement.style.left = '0px';
+    stats.domElement.style.top = '0px';
+    document.body.appendChild(stats.domElement);
+    count_particles = document.querySelector('.js-count-particles');
+    update = function() {
+        stats.begin();
+        stats.end();
+        if (window.pJSDom[0].pJS.particles && window.pJSDom[0].pJS.particles.array) {
+            count_particles.innerText = window.pJSDom[0].pJS.particles.array.length;
+        }
+        requestAnimationFrame(update);
+    };
+    requestAnimationFrame(update);
+</script>
+
 </body>
 </html>
