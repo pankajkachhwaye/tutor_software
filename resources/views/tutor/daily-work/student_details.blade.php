@@ -53,6 +53,8 @@
     var APP_URL = {!! json_encode(url('/')) !!}
     var token = '{!! csrf_token() !!}'
     var users = [];
+    var branchjson = [];
+    var subjectjson = [];
 </script>
 @if(session('returnStatus'))
     @include('partials.message')
@@ -61,6 +63,22 @@
 
     <script type="text/javascript">
      users = {!! json_encode($users) !!}
+    </script>
+
+
+@endif
+@if(isset($branchjson))
+
+    <script type="text/javascript">
+        branchjson = {!! json_encode($branchjson) !!}
+    </script>
+
+
+@endif
+@if(isset($subjects))
+
+    <script type="text/javascript">
+        subjectjson = {!! json_encode($subjects) !!}
     </script>
 
 
@@ -75,18 +93,22 @@
             </a>
             <div class="brand pull-left"><a href="{{url('all-semesters')}}">TUTOR | STUDENT'S DETAILS</a></div>
             <div class="brand pull-right">
-                <i class="fa fa-dashboard" style="font-size:24px;color:grey"></i>
-                <a href="{{url('daily-work-entry/show')}}" style="font-size:18px; color:grey; ">Home</a>
-                <i class="fa fa-calendar" style="font-size:24px;color:grey"></i>
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalWeek" style="font-size:18px; color:grey; ">Add Week</a>
-                <i class="fa fa-address-book-o" style="font-size:24px;color:grey"></i>
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal" style="font-size:18px; color:grey; ">Add Contact</a>
-                <i class="fa fa-address-book" style="font-size:24px;color:grey"></i>
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal2" style="font-size:18px; color:grey; ">show Contact</a>
-                <i class="fa fa-money" style="font-size:24px;color:grey"></i>
-                <a href="{{url('payment-history')}}" style="font-size:18px; color:grey; ">Payment History</a>
-                <i class="fa fa-users" style="font-size:24px;color:grey"></i>
-                <a href="{{url('register-tutor')}}" style="font-size:18px; color:grey; ">Register Tutor</a>
+                {{--<i class="fa fa-dashboard" style="font-size:24px;color:grey"></i>--}}
+                <a href="{{url('daily-work-entry/show')}}" style="font-size:16px; color:grey; ">Home</a>
+                |{{--<i class="fa fa-calendar" style="font-size:24px;color:grey"></i>--}}
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalWeek" style="font-size:16px; color:grey; ">Add Week</a>
+                |{{--<i class="fa fa-address-book-o" style="font-size:24px;color:grey"></i>--}}
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal" style="font-size:16px; color:grey; ">Add Contact</a>
+                |{{--<i class="fa fa-address-book" style="font-size:24px;color:grey"></i>--}}
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal2" style="font-size:16px; color:grey; ">show Contact</a>
+                |{{--<i class="fa fa-money" style="font-size:24px;color:grey"></i>--}}
+                <a href="{{url('payment-history')}}" style="font-size:16px; color:grey; ">Payment History</a>
+               | {{--<i class="fa fa-industry" style="font-size:24px;color:grey"></i>--}}
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#myModalBranch" style="font-size:16px; color:grey; ">Add Branch</a>
+                |
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#myModalSubject" style="font-size:16px; color:grey; ">Add Subject</a>
+                |{{--<i class="fa fa-users" style="font-size:24px;color:grey"></i>--}}
+                <a href="{{url('register-tutor')}}" style="font-size:16px; color:grey; ">Register Tutor</a>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
                         href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" style="font-size:18px; color:#FF0000; ">Logout</a>
@@ -362,8 +384,8 @@
                                                                     <td><input  type="text" name="website_link"></td>
                                                                     <td><input type="text" name="user_id"></td>
                                                                     <td><input type="text" name="password"></td>
-                                                                    <td><input required type="text" name="branch_name"></td>
-                                                                    <td><input required type="text" name="subject_name"></td>
+                                                                    <td><input required type="text" class="branchsuggest" autocomplete="off" name="branch_name"></td>
+                                                                    <td><input required type="text" class="subjectsuggest" name="subject_name"></td>
                                                                     <td>
                                                                         <select required style="width: 200px" class="form-control show-tick"
                                                                                 id="type" name="type">
@@ -564,8 +586,8 @@
                                                                     <td ><input type="text"  name="website_link"></td>
                                                                     <td ><input type="text"  name="user_id"></td>
                                                                     <td ><input type="text"  name="password"></td>
-                                                                    <td><input type="text" required name="branch_name"></td>
-                                                                    <td ><input type="text" required name="subject_name"></td>
+                                                                    <td><input type="text" required class="branchsuggest" name="branch_name"></td>
+                                                                    <td ><input type="text" required class="subjectsuggest" name="subject_name"></td>
                                                                     <td >
                                                                         <select style="width:120px" required class="form-control" name="type">
                                                                             <option>-- Please Select --</option>
@@ -889,6 +911,78 @@
 
     </div>
 
+    <div class="modal fade" id="myModalBranch" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New Branch</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" style="padding: 15px" method="post" action="{{url('/add-new-branch')}}">
+                        {{csrf_field()}}
+                        <div class="form-group" >
+                            <label for="contact">Branch Name</label><br/>
+                            <input type="text" required name="branch_name" class="form-control">
+                        </div>
+                        <div class="form-group" >
+                            <input type="submit"  value="Save" class="btn btn-primary">
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="divider x-large"></div>
+        <div class="divider large"></div>
+
+    </div>
+
+    <div class="modal fade" id="myModalSubject" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Add New Subject</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" style="padding: 15px" method="post" action="{{url('/add-new-subject')}}">
+                        {{csrf_field()}}
+                        <div class="form-group" >
+                            <label for="contact">Branch Name</label><br/>
+                            <select class="form-control" name="branch_id" required>
+                                <option ></option>
+                                            @foreach($branches as $value)
+                                    <option value="{{$value->id}}">{{$value->branch_name}}</option>
+                                                @endforeach
+                            </select>
+
+                        </div>
+                        <div class="form-group" >
+                            <label for="contact">Subject Name</label><br/>
+                            <input type="text" required name="subject_name" class="form-control">
+                        </div>
+                        <div class="form-group" >
+                            <input type="submit"  value="Save" class="btn btn-primary">
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="divider x-large"></div>
+        <div class="divider large"></div>
+
+    </div>
+
     <div class="modal fade" id="myModal" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -1035,13 +1129,13 @@
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Branch Name</label><br/>
-                                <input type="text" name="branch_name" id="dbranch_name" class="form-control">
+                                <input type="text" name="branch_name" id="dbranch_name" class="form-control branchsuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Subject Name</label><br/>
-                                <input type="text" name="subject_name" id="dsubject_name" class="form-control">
+                                <input type="text" name="subject_name" id="dsubject_name" class="form-control subjectsuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">
@@ -1194,13 +1288,13 @@
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Branch Name</label><br/>
-                                <input type="text" name="branch_name" id="cbranch_name" class="form-control">
+                                <input type="text" name="branch_name" id="cbranch_name" class="form-control branchsuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">
                             <div class="form-group" >
                                 <label for="contact" class="control-label">Subject Name</label><br/>
-                                <input type="text" name="subject_name" id="csubject_name" class="form-control">
+                                <input type="text" name="subject_name" id="csubject_name" class="form-control subjectsuggest">
                             </div>
                         </div>
                         <div class="col-sm-4 clearfix">

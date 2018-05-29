@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Model\Branch;
 use App\Model\Contact;
 use App\Model\Semester;
 use App\Model\StudentCoursePayHistory;
 use App\Model\StudentDailyPayHistory;
+use App\Model\Subject;
 use App\Model\Week;
 use App\User;
 use Illuminate\Http\Request;
@@ -34,6 +36,29 @@ class AdminController extends Controller
         User::find($id)->update($temp_data);
         return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Admin Credentials Update successfully');
     }
+
+    public function addNewBranch(Request $request){
+
+        $branch = Branch::where('branch_name',$request->branch_name)->first();
+        if($branch != null){
+            return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Branch with this name is already exist');
+        }
+        Branch::insert(['branch_name' => $request->branch_name,'created_at' => Carbon::now()]);
+        return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Branch added successfully');
+
+
+    }
+
+    public function addNewSubject(Request $request){
+//        dd($request->all());
+        $branch = Subject::where('subject_name',$request->subject_name)->first();
+        if($branch != null){
+            return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Subject with this name is already exist');
+        }
+        Subject::insert(['branch_id'=>$request->branch_id,'subject_name' => $request->subject_name,'created_at' => Carbon::now()]);
+        return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Subject added successfully');
+
+  }
 
     public function allSemesters(){
         Session::forget('semester_id');

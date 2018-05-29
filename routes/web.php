@@ -50,11 +50,17 @@ Route::group(['namespace' => 'Admin'], function () {
     Route::post('/add-new-contact','AdminController@addNewContact');
     Route::post('/add-week','AdminController@addWeek');
     Route::post('/update-week','AdminController@updateWeek');
+
     Route::get('/edit-week/{id}','AdminController@editWeek');
         Route::get('/show-week-report/{id}','AdminController@showWeekReport');
         Route::get('/dashboard','AdminController@index');
 //        Route::get('/contact','AdminController@contacts');
         Route::get('/delete-contact/{id}','AdminController@deleteContact');
+
+
+    // Branch
+    Route::post('/add-new-branch','AdminController@addNewBranch');
+    Route::post('/add-new-subject','AdminController@addNewSubject');
 
         Route::group(['prefix' => 'daily-work-entry'], function () {
         Route::get('/add/{id}','DailyWorkController@add');

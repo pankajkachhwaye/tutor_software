@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Model\Branch;
 use App\Model\DailyWorkReport;
 
 use App\Model\Course;
@@ -9,6 +10,7 @@ use App\Model\Contact;
 use App\Model\Semester;
 use App\Model\StudentCoursePayHistory;
 use App\Model\StudentDailyPayHistory;
+use App\Model\Subject;
 use App\Model\Week;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -115,6 +117,7 @@ class DailyWorkController extends Controller
     public function show()
     {
 
+
         $temp = User::Select('name')->where('role','tutor')->get();
         $users = [];
         foreach ($temp as $user){
@@ -126,8 +129,17 @@ class DailyWorkController extends Controller
            }
        $contactData= $semester_id->contacts()->orderBy('created_at','asc')->get();
         $weeks = $semester_id->weeks()->orderBy('created_at','asc')->get();
-
-        return view('tutor.daily-work.student_details',compact('contactData','weeks','users'));
+            $branches = Branch::all();
+            $subjectsall = Subject::all();
+        $branchjson = [];
+        $subjects = [];
+        foreach ($branches as $branch){
+            array_push($branchjson,$branch->branch_name);
+        }
+        foreach ($subjectsall as $subject){
+            array_push($subjects,$subject->subject_name);
+        }
+        return view('tutor.daily-work.student_details',compact('contactData','weeks','users','branches','branchjson','subjects'));
 
     }
 
