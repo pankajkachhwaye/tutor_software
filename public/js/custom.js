@@ -122,6 +122,38 @@ $(function () {
 
     });
 
+    $(document).on('click','#editBranch',function () {
+        var id = $(this).attr('data-react-id');
+        $('#showBranch').modal('hide');
+        $.ajax({
+            type: "GET",
+            url: APP_URL + '/edit-branch/' + id,
+            data: id,
+            success: function(data) {
+                $('#branch_name').val(data.branch_name);
+                $('#branch_id').val(data.id);
+                $('#brancheditmodal').modal('show')
+            }
+        });
+
+    });
+
+    $(document).on('click','#editSubject',function () {
+        var id = $(this).attr('data-react-id');
+        $.ajax({
+            type: "GET",
+            url: APP_URL + '/edit-subject/' + id,
+            data: id,
+            success: function(data) {
+                $('#branch_name_subject').val(data.branch.branch_name);
+                $('#subject_name').val(data.subject_name);
+                $('#subject_id').val(data.id);
+                $('#subjectEditModal').modal('show')
+            }
+        });
+
+    });
+
     $(document).on('click','#editdailywork',function () {
         var id = $(this).attr('data-react-id');
 

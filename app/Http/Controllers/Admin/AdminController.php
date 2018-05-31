@@ -45,8 +45,44 @@ class AdminController extends Controller
         }
         Branch::insert(['branch_name' => $request->branch_name,'created_at' => Carbon::now()]);
         return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Branch added successfully');
+    }
 
+    public function showSubjects($id){
+        $subjetcs = Branch::with(['subjects'])->find($id);
+        $branches = Branch::all();
+        return view('tutor.daily-work.showsubjects',compact('subjetcs','branches'));
+    }
 
+    public function editBranch($id){
+        $branch = Branch::find($id);
+
+        return Response::json($branch);
+    }
+
+    public function editSubject($id){
+        $branch = Subject::with(['branch'])->find($id);
+
+        return Response::json($branch);
+    }
+
+    public function updateBranch(Request $request){
+        $data = [
+            'branch_name' => $request->branch_name,
+            'updated_at' => Carbon::now()
+        ];
+
+        Branch::where('id',$request->branch_id)->update($data);
+        return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Branch updated successfully');
+    }
+
+    public function updateSubject(Request $request){
+        $data = [
+            'subject_name' => $request->subject_name,
+            'updated_at' => Carbon::now()
+        ];
+
+        Subject::where('id',$request->subject_id)->update($data);
+        return back()->with('returnStatus', true)->with('status', 101)->with('message', 'Subject updated successfully');
     }
 
     public function addNewSubject(Request $request){

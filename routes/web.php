@@ -61,8 +61,13 @@ Route::group(['namespace' => 'Admin'], function () {
     // Branch
     Route::post('/add-new-branch','AdminController@addNewBranch');
     Route::post('/add-new-subject','AdminController@addNewSubject');
+    Route::get('/show-subjects/{id}','AdminController@showSubjects');
+    Route::get('/edit-branch/{id}','AdminController@editBranch');
+    Route::post('/update-branch','AdminController@updateBranch');
+    Route::get('/edit-subject/{id}','AdminController@editSubject');
+    Route::post('/update-subject','AdminController@updateSubject');
 
-        Route::group(['prefix' => 'daily-work-entry'], function () {
+    Route::group(['prefix' => 'daily-work-entry'], function () {
         Route::get('/add/{id}','DailyWorkController@add');
         Route::get('/edit-daily-work/{id}','DailyWorkController@editDailyWork');
         Route::get('/edit-course/{id}','DailyWorkController@editCourse');

@@ -94,21 +94,23 @@
             <div class="brand pull-left"><a href="{{url('all-semesters')}}">TUTOR | STUDENT'S DETAILS</a></div>
             <div class="brand pull-right">
                 {{--<i class="fa fa-dashboard" style="font-size:24px;color:grey"></i>--}}
-                <a href="{{url('daily-work-entry/show')}}" style="font-size:16px; color:grey; ">Home</a>
+                <a href="{{url('daily-work-entry/show')}}" style="font-size:14px; color:grey; ">Home</a>
                 |{{--<i class="fa fa-calendar" style="font-size:24px;color:grey"></i>--}}
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalWeek" style="font-size:16px; color:grey; ">Add Week</a>
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalWeek" style="font-size:14px; color:grey; ">Add Week</a>
                 |{{--<i class="fa fa-address-book-o" style="font-size:24px;color:grey"></i>--}}
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal" style="font-size:16px; color:grey; ">Add Contact</a>
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal" style="font-size:14px; color:grey; ">Add Contact</a>
                 |{{--<i class="fa fa-address-book" style="font-size:24px;color:grey"></i>--}}
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal2" style="font-size:16px; color:grey; ">show Contact</a>
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModal2" style="font-size:14px; color:grey; ">show Contact</a>
                 |{{--<i class="fa fa-money" style="font-size:24px;color:grey"></i>--}}
-                <a href="{{url('payment-history')}}" style="font-size:16px; color:grey; ">Payment History</a>
-               | {{--<i class="fa fa-industry" style="font-size:24px;color:grey"></i>--}}
-                <a href="javascript:void(0)" data-toggle="modal" data-target="#myModalBranch" style="font-size:16px; color:grey; ">Add Branch</a>
+                <a href="{{url('payment-history')}}" style="font-size:14px; color:grey; ">Payment History</a>
+                | {{--<i class="fa fa-industry" style="font-size:24px;color:grey"></i>--}}
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#myModalBranch" style="font-size:14px; color:grey; ">Add Branch</a>
                 |
-                <a href="javascript:void(0)" data-toggle="modal" data-target="#myModalSubject" style="font-size:16px; color:grey; ">Add Subject</a>
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#showBranch" style="font-size:14px; color:grey; ">Show Branch</a>
+                |
+                <a href="javascript:void(0)" data-toggle="modal" data-target="#myModalSubject" style="font-size:14px; color:grey; ">Add Subject</a>
                 |{{--<i class="fa fa-users" style="font-size:24px;color:grey"></i>--}}
-                <a href="{{url('register-tutor')}}" style="font-size:16px; color:grey; ">Register Tutor</a>
+                <a href="{{url('register-tutor')}}" style="font-size:14px; color:grey; ">Register Tutor</a>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
                         href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" style="font-size:18px; color:#FF0000; ">Logout</a>
@@ -942,6 +944,38 @@
 
     </div>
 
+    <div class="modal fade" id="brancheditmodal" role="dialog">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Edit Branch</h4>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" style="padding: 15px" method="post" action="{{url('/update-branch')}}">
+                        {{csrf_field()}}
+                        <div class="form-group" >
+                            <label for="contact">Branch Name</label><br/>
+                            <input type="text" required name="branch_name" id="branch_name" class="form-control">
+                            <input type="hidden" required name="branch_id" id="branch_id" class="form-control">
+                        </div>
+                        <div class="form-group" >
+                            <input type="submit"  value="Save" class="btn btn-primary">
+                        </div>
+
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="divider x-large"></div>
+        <div class="divider large"></div>
+
+    </div>
+
     <div class="modal fade" id="myModalSubject" role="dialog">
         <div class="modal-dialog modal-sm">
             <div class="modal-content">
@@ -1443,6 +1477,55 @@
                                         <td>{{$valueweek->end_date}}</td>
                                         <td><a href="{{url('show-week-report'.'/'.$valueweek->id)}}" class="btn btn-success">Show</a>
                                             <a href="javascript:void(0)" data-react-id="{{$valueweek->id}}" id="editWeek" class="btn btn-primary">Edit</a></td>
+
+                                    </tr>
+                                @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="divider x-large"></div>
+        <div class="divider large"></div>
+
+    </div>
+
+    <div class="modal fade" id="showBranch" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Show All Branches</h4>
+                </div>
+                <div class="modal-body clearfix">
+
+                    <div class="row">
+                    <div class="col-md-12">
+                        <div class="table-responsive">
+                            <table class="table datatable">
+                                <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Branch Name</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+
+                                @foreach($branches as $keybranch => $valuebranch)
+                                    <tr>
+                                        <td>{{$keybranch+1}}</td>
+                                        <td>{{$valuebranch->branch_name}}</td>
+                                        <td><a href="{{url('show-subjects'.'/'.$valuebranch->id)}}" class="btn btn-success">Show All Subjetcs</a>
+                                            <a href="javascript:void(0)" data-react-id="{{$valuebranch->id}}" id="editBranch" class="btn btn-primary">Edit</a></td>
 
                                     </tr>
                                 @endforeach
