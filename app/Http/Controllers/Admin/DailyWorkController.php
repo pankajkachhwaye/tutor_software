@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Mail\NewCourseAssigned;
+use App\Mail\NewDailyWorkAssigned;
 use App\Model\Branch;
 use App\Model\DailyWorkReport;
 
@@ -12,12 +14,15 @@ use App\Model\StudentCoursePayHistory;
 use App\Model\StudentDailyPayHistory;
 use App\Model\Subject;
 use App\Model\Week;
+use App\Notifications\NewEntryDailyWork;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Session;
 use Response;
 use App\User;
+use App\Notifications\NewCourse;
+use Illuminate\Support\Facades\Mail;
 
 class DailyWorkController extends Controller
 {
@@ -33,7 +38,6 @@ class DailyWorkController extends Controller
     }
 
     public function createDailyWork(Request $request){
-
         $validate = $this->validateRequest($request);
         if(count($validate) > 0){
             $message = implode(',', $validate);
@@ -53,10 +57,18 @@ class DailyWorkController extends Controller
             $temp_data['tutor_name'] = json_encode($tutor_name);
             $temp_data['tutor_price'] = json_encode($tutor_price);
             $temp_data['created_at'] = Carbon::now();
-            $insert = DailyWorkReport::insert($temp_data);
-            if($insert){
-                return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+            $insert = DailyWorkReport::insertGetId($temp_data);
+            $dailywork = DailyWorkReport::find($insert);
+            $users = explode(',',$request->tutor_name);
+            $session_id = Session::get('semester_id');
+            foreach ($users as $value){
+                $user = User::where('name',$value)->first();
+                $user->notify(new NewEntryDailyWork($session_id,$dailywork,$request_hash));
+                Mail::to($user->email)->queue(new NewDailyWorkAssigned($session_id,$dailywork,$request_hash,$user));
             }
+
+                return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
+
         }
 
     }
@@ -165,7 +177,15 @@ class DailyWorkController extends Controller
             $temp_data['tutor_name'] = json_encode($tutor_name);
             $temp_data['tutor_price'] = json_encode($tutor_price);
             $temp_data['created_at'] = Carbon::now();
-            $insert = Course::insert($temp_data);
+            $insert = Course::insertGetId($temp_data);
+            $course = Course::find($insert);
+            $users = explode(',',$request->tutor_name);
+            $session_id = Session::get('semester_id');
+            foreach ($users as $value){
+                $user = User::where('name',$value)->first();
+                $user->notify(new NewCourse($session_id,$course,$request_hash));
+                Mail::to($user->email)->queue(new NewCourseAssigned($session_id,$course,$request_hash,$user));
+            }
 
             if ($insert) {
                 return redirect('daily-work-entry/show' . '#' . $request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');

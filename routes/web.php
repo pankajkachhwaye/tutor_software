@@ -31,6 +31,7 @@ Route::get('/test',function (){
 Route::get('/home', 'HomeController@index')->name('home');
 
 Route::get('/tutor-dashboard','TutorController@tutorDashboard');
+Route::get('/notifications','TutorController@notifications');
 Route::get('/tutor-all-semester','TutorController@tutorAllSemester');
 Route::get('/show-week-report-tutor/{id}','TutorController@showWeekReportTutor');
 Route::get('/show-tutor-dashboard/{semester_id}','TutorController@showTutorDashboard');

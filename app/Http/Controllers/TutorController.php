@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Model\Contact;
 use App\Model\Week;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Model\Semester;
 
@@ -43,6 +44,17 @@ class TutorController extends Controller
         //dd($id);
 
         return view('tutor.tutordashboard',compact('contactData','weeks'));
+    }
+
+    public function notifications(){
+        $semester_id = Semester::find(Session::get('semester_id'));
+        if($semester_id == null){
+            return redirect('tutor-all-semester')->with('returnStatus', true)->with('status', 101)->with('message', 'Please select semester');
+        }
+        $contactData= $semester_id->contacts()->orderBy('created_at','asc')->get();
+        $weeks = $semester_id->weeks()->orderBy('created_at','asc')->get();
+        return view('tutor.notification',compact('contactData','weeks'));
+
     }
 
     public function showWeekReportTutor($id){

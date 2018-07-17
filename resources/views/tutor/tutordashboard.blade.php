@@ -40,6 +40,23 @@
         #idValue2:hover{
             cursor: not-allowed;
         }
+        .button__badge {
+            background-color: #fa3e3e;
+            border-radius: 2px;
+            color: white;
+            padding: 1px 3px;
+            font-size: 13px;
+            position: absolute;
+            top: -6px;
+            right: 102px;
+        }
+        /* Define how each icon button should look like */
+        .button {
+            color: white;
+            display: inline-block; /* Inline elements with width and height. TL;DR they make the icon buttons stack from left-to-right instead of top-to-bottom */
+            position: relative; /* All 'absolute'ly positioned elements are relative to this one */
+            padding: 2px 5px; /* Add some padding so it looks nice */
+        }
     </style>
 </head>
 <body class=" ">
@@ -61,7 +78,13 @@
                 <i class="fa fa-dashboard" style="font-size:24px;color:grey"></i>
                 <a href="{{url('/tutor-dashboard')}}" style="font-size:18px; color:grey; ">Home</a>
                 <i class="fa fa-calendar" style="font-size:24px;color:grey"></i>
-                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalWeek" style="font-size:18px; color:grey; ">weekly Reports</a>
+                <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalWeek" style="font-size:18px; color:grey; ">Weekly Reports</a>
+                <i class="fa fa-bell" style="font-size:24px;color:grey"></i>
+                <a href="{{url('/notifications')}}"  style="font-size:18px; color:grey; " class="button">Notification
+                @if(\Illuminate\Support\Facades\Auth::user()->unreadNotifications()->count() > 0)
+                    <span class="button__badge">{{\Illuminate\Support\Facades\Auth::user()->unreadNotifications()->count()}}</span>
+                @endif
+                </a>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
                         href="{{ url('/logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();" style="font-size:18px; color:#FF0000; ">Logout</a>
