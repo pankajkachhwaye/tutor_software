@@ -26,6 +26,34 @@ class AdminController extends Controller
         $this->middleware('admin');
     }
 
+    public function addEmployee(){
+        $contactData = Contact::all();
+        return view('tutor.admin.addemployee',compact('contactData'));
+    }
+
+
+    public function employeeRegister(Request $request){
+        $check = User::UserByNameEmail($request->name,$request->email)->first();
+        if($check != null){
+            return back()->with('status', 400)->with('message', 'User already register with this name and email');
+        }
+        else{
+            $this->createNewEmployee($request);
+            return back()->with('status', 100)->with('message', 'User register successfully');
+        }
+    }
+
+    public function createNewEmployee($request){
+        User::insert([
+            'name'=>$request->name,
+            'email'=>$request->email,
+            'mobile'=>$request->mobile,
+            'password'=>bcrypt('123456'),
+            'role'=>'employee',
+            'created_at' =>Carbon::now()
+        ]);
+    }
+
     public function changeCdminCredentials(Request $request){
         $id = Auth::user()->id;
         $temp_data = $request->all();
@@ -126,6 +154,11 @@ class AdminController extends Controller
     }
 
 
+    public function editTutor($id){
+        $user = User::find($id);
+        return Response::json($user);
+    }
+
     public function registerTutor(){
         $tutors = User::where('role','tutor')->orderBy('created_at','desc')->get();
         $contactData= Contact::orderBy('created_at','asc')->get();
@@ -144,10 +177,21 @@ class AdminController extends Controller
         }
     }
 
+    public function updateTutor(Request $request){
+             $id = $request->id;
+            $data = $request->all();
+            unset($data['_token']);
+            unset($data['id']);
+            User::where('id',$id)->update($data);
+            return back()->with('status', 100)->with('message', 'User Update successfully');
+
+    }
+
     protected function createUser($request){
         User::insert([
            'name'=>$request->name,
            'email'=>$request->email,
+           'notify_email' => $request->notify_email,
            'mobile'=>$request->mobile,
            'join_date'=>$request->join_date,
            'job_timming'=>$request->job_timming,

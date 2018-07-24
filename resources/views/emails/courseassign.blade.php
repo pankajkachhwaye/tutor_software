@@ -59,7 +59,7 @@ $style = [
                 <tr>
                     <td style="{{ $style['email-masthead'] }}" bgcolor="#1c202b">
                         <a style="{{ $fontFamily }} {{ $style['email-masthead_name'] }}" href="http://software.ecademictube.com" target="_blank">
-                            <img width="80px" height="80px" src="https://ecademictube.com/assets/images/web_logo.jpg">
+                            <img width="80px" height="80px" src="http://software.ecademictube.com/public/images/e56396d9-529e-4688-b8e6-b09311c4d4b7.jpg">
                         </a>
                     </td>
                 </tr>

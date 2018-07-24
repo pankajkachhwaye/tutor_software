@@ -64,7 +64,7 @@ class DailyWorkController extends Controller
             foreach ($users as $value){
                 $user = User::where('name',$value)->first();
                 $user->notify(new NewEntryDailyWork($session_id,$dailywork,$request_hash));
-                Mail::to($user->email)->queue(new NewDailyWorkAssigned($session_id,$dailywork,$request_hash,$user));
+                Mail::to($user->notify_email)->queue(new NewDailyWorkAssigned($session_id,$dailywork,$request_hash,$user));
             }
 
                 return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
@@ -184,7 +184,7 @@ class DailyWorkController extends Controller
             foreach ($users as $value){
                 $user = User::where('name',$value)->first();
                 $user->notify(new NewCourse($session_id,$course,$request_hash));
-                Mail::to($user->email)->queue(new NewCourseAssigned($session_id,$course,$request_hash,$user));
+                Mail::to($user->notify_email)->queue(new NewCourseAssigned($session_id,$course,$request_hash,$user));
             }
 
             if ($insert) {

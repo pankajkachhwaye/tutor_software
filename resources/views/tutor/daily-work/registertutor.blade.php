@@ -122,7 +122,13 @@
                         <div class="row">
                         <div class="form-group col-md-6" >
                             <label for="contact">Email</label><br/>
-                            <input type="text" name="email" class="form-control">
+                            <input type="text" required name="email" class="form-control">
+                        </div>
+                        </div>
+                        <div class="row">
+                        <div class="form-group col-md-6" >
+                            <label for="contact">Notify Email</label><br/>
+                            <input type="text" name="notify_email" class="form-control">
                         </div>
                         </div>
                         <div class="row">
@@ -164,10 +170,12 @@
                                     <th>S.no.</th>
                                     <th>Tutor Name</th>
                                     <th>Email</th>
+                                    <th>Notify email</th>
                                     <th>Mobile Number</th>
                                     <th>Join Date</th>
                                     <th>Job Timming</th>
                                     <th>Subjects</th>
+                                    <th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -176,10 +184,12 @@
                                         <td>{{$keypay+1}}</td>
                                         <td>{{$valuetutor->name}}</td>
                                         <td>{{$valuetutor->email}}</td>
+                                        <td>{{$valuetutor->notify_email}}</td>
                                         <td>{{$valuetutor->mobile}}</td>
                                         <td>{{$valuetutor->join_date}}</td>
                                         <td>{{$valuetutor->job_timming}}</td>
                                         <td>{{$valuetutor->subjects}}</td>
+                                        <td><a href="javascript:void(0)" data-react-id="{{$valuetutor->id}}" id="editTutor">Edit</a></td>
                                     </tr>
                                     @endforeach
                                 </tbody>
@@ -725,6 +735,78 @@
         <div class="divider large"></div>
 
     </div>
+    <div class="modal fade" id="tutoredit" role="dialog">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update Tutor</h4>
+                </div>
+                <div class="modal-body clearfix">
+                    <form class="form-horizontal" style="padding: 15px" method="post" action="{{url('/update-tutor')}}">
+                        {{csrf_field()}}
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Name</label><br/>
+                                <input type="text" name="name" id="tutorName" class="form-control">
+                                <input type="hidden" name="id" id="tutorId" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Email</label><br/>
+                                <input type="text" required readonly id="tutorEmail" name="email" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Notify Email</label><br/>
+                                <input type="text" name="notify_email" id="tutorNotifyEmail" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Mobile number</label><br/>
+                                <input type="text" name="mobile" id="tutorMobile" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Join Date</label><br/>
+                                <input type="text" name="join_date" class="form-control datepicker" id="tutorJoinDate" >
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Job Timming</label><br/>
+                                <input type="text" name="job_timming" id="tutorJobTiming" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <label for="contact">Subjects</label><br/>
+                                <input type="text" name="subjects" id="tutorSubject" class="form-control">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col-md-6" >
+                                <input type="submit"  value="Update" class="btn btn-primary">
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+        <div class="divider x-large"></div>
+        <div class="divider large"></div>
+
+    </div>
 
 </div>
 
@@ -751,6 +833,27 @@
 
 <script type="text/javascript">
     $(function () {
+        $(document).on('click','#editTutor',function () {
+            var id = $(this).attr('data-react-id');
+            $.ajax({
+                type: "GET",
+                url: APP_URL + '/edit-tutor/' + id,
+                data: id,
+                success: function(data) {
+                    $('#tutorName').val(data.name);
+                    $('#tutorEmail').val(data.email);
+                    $('#tutorMobile').val(data.mobile);
+                    $('#tutorNotifyEmail').val(data.notify_email);
+                    $('#tutorJoinDate').val(data.join_date);
+                    $('#tutorJobTiming').val(data.job_timming);
+                    $('#tutorSubject').val(data.subjects);
+                    $('#tutorId').val(data.id);
+
+                    $('#tutoredit').modal('show')
+                }
+            });
+        });
+
         $('.datatable').DataTable();
         $('.datepicker').datepicker({
             autoclose: true,
@@ -900,6 +1003,7 @@ $('#datepicker').datepicker({
         $("a[data-toggle='popover']").popover({
             trigger: "hover", html: true, placement: "top"
         });
+
     });
 
 </script>

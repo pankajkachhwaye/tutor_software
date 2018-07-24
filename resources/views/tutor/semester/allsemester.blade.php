@@ -81,6 +81,8 @@
                 <a href="javascript:void(0)"  data-toggle="modal" data-target="#myModalSemester" style="font-size:18px; color:grey; ">Add Semester</a>
                 <i class="fa fa-key" style="font-size:24px;color:grey"></i>
                 <a href="javascript:void(0)"  data-toggle="modal" data-target="#changeCredentials" style="font-size:18px; color:grey; ">Change Admin Credentials</a>
+                <i class="fa fa-users" style="font-size:24px;color:grey"></i>
+                <a href="{{url('add-employee')}}"  style="font-size:18px; color:grey; ">Add Employee</a>
                 <i class="fa fa-address-book-o" style="font-size:24px;color:grey"></i>
                 <i class="fa fa-sign-out" style="font-size:24px;color:red"></i> <a
                         href="{{ url('/logout') }}" onclick="event.preventDefault();

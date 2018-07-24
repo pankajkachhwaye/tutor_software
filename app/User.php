@@ -30,4 +30,8 @@ class User extends Authenticatable
     public function scopeUserByNameEmail($query,$name,$email){
         return $query->where('name',$name)->orWhere('email',$email);
     }
+
+    public function scopeUserByNotifyEmail($query,$email){
+        return $query->Where('notify_email',$email);
+    }
 }

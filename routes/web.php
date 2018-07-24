@@ -41,10 +41,14 @@ Route::group(['namespace' => 'Admin'], function () {
 
     Route::get('/payment-history','AdminController@paymentHistory');
     Route::get('/register-tutor','AdminController@registerTutor');
+    Route::get('/edit-tutor/{id}','AdminController@editTutor');
     Route::post('/register-tutor','AdminController@addNewTutor');
+    Route::post('/update-tutor','AdminController@updateTutor');
 
 
     Route::get('/all-semesters','AdminController@allSemesters');
+    Route::get('/add-employee','AdminController@addEmployee');
+    Route::post('/employee-register','AdminController@employeeRegister');
     Route::post('/change-admin-credentials','AdminController@changeCdminCredentials');
     Route::get('/show-semester-data/{semester_id}','AdminController@showSemesterData');
     Route::post('/add-new-semester','AdminController@addNewSemester');
