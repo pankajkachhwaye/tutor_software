@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Mail\CourseUpdated;
+use App\Mail\DailyWorkUpdated;
 use App\Mail\NewCourseAssigned;
 use App\Mail\NewDailyWorkAssigned;
 use App\Model\Branch;
@@ -61,10 +63,12 @@ class DailyWorkController extends Controller
             $dailywork = DailyWorkReport::find($insert);
             $users = explode(',',$request->tutor_name);
             $session_id = Session::get('semester_id');
+            $contact_person = Contact::find($request->contact_id);
+            $semester = Semester::find($session_id);
             foreach ($users as $value){
                 $user = User::where('name',$value)->first();
                 $user->notify(new NewEntryDailyWork($session_id,$dailywork,$request_hash));
-                Mail::to($user->notify_email)->queue(new NewDailyWorkAssigned($session_id,$dailywork,$request_hash,$user));
+                Mail::to($user->notify_email)->queue(new NewDailyWorkAssigned($session_id,$dailywork,$request_hash,$user,$contact_person,$semester));
             }
 
                 return redirect('daily-work-entry/show'.'#'.$request_hash)->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');
@@ -118,6 +122,17 @@ class DailyWorkController extends Controller
             $temp_data['tutor_price'] = json_encode($tutor_price);
 //        $temp_data['created_at'] = Carbon::now();
             $insert = DailyWorkReport::where('id', $id)->update($temp_data);
+            $dailywork = DailyWorkReport::find($id);
+            $users = explode(',',$request->tutor_name);
+            $session_id = Session::get('semester_id');
+            $contact_person = Contact::find($dailywork->contact_id);
+//            dd($contact_person);
+            $semester = Semester::find($session_id);
+            foreach ($users as $value){
+                $user = User::where('name',$value)->first();
+                $user->notify(new \App\Notifications\DailyWorkUpdated($session_id,$dailywork));
+                Mail::to($user->notify_email)->queue(new DailyWorkUpdated($session_id,$dailywork,$user,$contact_person,$semester));
+            }
 
 
             if ($insert) {
@@ -181,10 +196,12 @@ class DailyWorkController extends Controller
             $course = Course::find($insert);
             $users = explode(',',$request->tutor_name);
             $session_id = Session::get('semester_id');
+            $contact_person = Contact::find($request->contact_id);
+            $semester = Semester::find($session_id);
             foreach ($users as $value){
                 $user = User::where('name',$value)->first();
                 $user->notify(new NewCourse($session_id,$course,$request_hash));
-                Mail::to($user->notify_email)->queue(new NewCourseAssigned($session_id,$course,$request_hash,$user));
+                Mail::to($user->notify_email)->queue(new NewCourseAssigned($session_id,$course,$request_hash,$user,$contact_person,$semester));
             }
 
             if ($insert) {
@@ -215,6 +232,16 @@ class DailyWorkController extends Controller
             $temp_data['tutor_price'] = json_encode($tutor_price);
 
             $insert = Course::where('id', $id)->update($temp_data);
+            $course = Course::find($id);
+            $users = explode(',',$request->tutor_name);
+            $session_id = Session::get('semester_id');
+            $contact_person = Contact::find($course->contact_id);
+            $semester = Semester::find($session_id);
+            foreach ($users as $value){
+                $user = User::where('name',$value)->first();
+                $user->notify(new \App\Notifications\CourseUpdated($session_id,$course));
+                Mail::to($user->notify_email)->queue(new CourseUpdated($session_id,$course,$user,$contact_person,$semester));
+            }
 
             if ($insert) {
                 return redirect('daily-work-entry/show')->with('returnStatus', true)->with('status', 101)->with('message', 'Work Report Added successfully');

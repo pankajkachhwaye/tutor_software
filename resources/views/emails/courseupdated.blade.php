@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -70,6 +69,7 @@ $style = [
                         <table style="{{ $style['email-body_inner'] }}" align="center" width="570" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
+
                                     <p style="{{ $style['paragraph'] }}">
                                         To check all of your work details and total extra price <br />
                                         Log on - <a href="http://software.ecademictube.com">software.ecademictube.com </a><br />
@@ -84,8 +84,7 @@ $style = [
                                     <!-- Intro -->
 
                                     <p style="{{ $style['paragraph'] }}">
-                                        You have new work assigned by {{ config('app.name') }} on semester {{$semester->semester_name}}.
-
+                                        Your Course is updated by {{ config('app.name') }} on semester {{$semester->semester_name}}.
                                     </p>
 
 
@@ -98,77 +97,23 @@ $style = [
                                                 Student Name
                                             </td>
                                             <td>
-                                                {{ $dailywork->student_name  }}
+                                                {{ $course->student_name  }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: left">
-                                                Type
+                                                Tutor's Name
                                             </td>
                                             <td>
-                                                {{ $dailywork->type }}
+                                                {{ $course->tutor_name }}
                                             </td>
                                         </tr>
                                         <tr>
                                             <td style="text-align: left">
-                                                Status
+                                                Subject Name
                                             </td>
                                             <td>
-                                                {{ $dailywork->status }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: left">
-                                                Tutor Name
-                                            </td>
-                                            <td>
-                                                {{ $dailywork->tutor_name }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: left">
-                                                Tutor Price
-                                            </td>
-                                            <td>
-                                                {{ $dailywork->tutor_price }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: left">
-                                                Due Time
-                                            </td>
-                                            <td>
-                                                @php
-
-                                                    $current_date = \Illuminate\Support\Carbon::now();
-                                                    $created_at = strtotime($dailywork->created_at);
-                                                    $time = strtotime($current_date) - $created_at;
-                                                    if(floatval(bcdiv($time/3600,1,2)) < floatval($dailywork->due_time)){
-                                                    $final = floatval($dailywork->due_time) - floatval(bcdiv($time/3600,1,2));
-                                                    $final = $final.' Hours';
-                                                    }
-                                                    else{
-                                                    $final = 'Due time passed.';
-                                                    }
-
-                                                @endphp
-                                                {{$final}}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: left">
-                                                Branch Name
-                                            </td>
-                                            <td>
-                                                {{ $dailywork->branch_name }}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style="text-align: left">
-                                                Subject name
-                                            </td>
-                                            <td>
-                                                {{ $dailywork->subject_name }}
+                                                {{ $course->subject_name }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -176,7 +121,7 @@ $style = [
                                                 Online/Offline/Both
                                             </td>
                                             <td>
-                                                {{ $dailywork->on_off_line }}
+                                                {{ $course->on_off_line }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -184,7 +129,7 @@ $style = [
                                                 Website
                                             </td>
                                             <td>
-                                                <a href="http://{{$dailywork->website_link}}" target="_blank">{{$dailywork->website_link}}</a>
+                                                <a href="http://{{$course->website_link}}" target="_blank">{{$course->website_link}}</a>
                                             </td>
                                         </tr>
                                         <tr>
@@ -192,7 +137,7 @@ $style = [
                                                 User Id
                                             </td>
                                             <td>
-                                                {{ $dailywork->user_id }}
+                                                {{$course->user_id}}
                                             </td>
                                         </tr>
                                         <tr>
@@ -200,7 +145,104 @@ $style = [
                                                 Password
                                             </td>
                                             <td>
-                                                {{ $dailywork->password }}
+                                                {{$course->password}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Type
+                                            </td>
+                                            <td>
+                                                {{$course->type}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Tutor's Price
+                                            </td>
+                                            <td>
+                                                {{$course->tutor_price}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Next Due Dates
+                                            </td>
+                                            <td>
+                                                {{$course->next_due_date}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Grades
+                                            </td>
+                                            <td>
+                                                {{$course->grades}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Branch Name
+                                            </td>
+                                            <td>
+                                                {{$course->branch_name}}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Comment
+                                            </td>
+                                            <td>
+                                                {{$course->student_contact_no}}
+                                            </td>
+                                        </tr>
+
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Branch Name
+                                            </td>
+                                            <td>
+                                                {{ $course->branch_name }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Subject name
+                                            </td>
+                                            <td>
+                                                {{ $course->subject_name }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Online/Offline/Both
+                                            </td>
+                                            <td>
+                                                {{ $course->on_off_line }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Website
+                                            </td>
+                                            <td>
+                                                <a href="http://{{$course->website_link}}" target="_blank">{{$course->website_link}}</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                User Id
+                                            </td>
+                                            <td>
+                                                {{ $course->user_id }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td style="text-align: left">
+                                                Password
+                                            </td>
+                                            <td>
+                                                {{ $course->password }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -208,7 +250,7 @@ $style = [
                                                 Team Member's Name
                                             </td>
                                             <td>
-                                                {{ $dailywork->student_contact_no }}
+                                                {{ $course->student_contact_no }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -216,7 +258,7 @@ $style = [
                                                 Tutor's comment
                                             </td>
                                             <td>
-                                                {{ $dailywork->mobile }}
+                                                {{ $course->mobile }}
                                             </td>
                                         </tr>
                                         <tr>
@@ -224,7 +266,7 @@ $style = [
                                                 Student's comment
                                             </td>
                                             <td>
-                                                {{ $dailywork->comment }}
+                                                {{ $course->comment }}
                                             </td>
                                         </tr>
                                     </table>

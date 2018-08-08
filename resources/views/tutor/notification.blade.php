@@ -238,6 +238,7 @@
                                            @foreach(\Illuminate\Support\Facades\Auth::User()->unreadNotifications as $notification)
                                                <tr data-status="pagado">
                                                 <td>
+                                                    <a href="{{url($notification->data['url'])}}">
                                                     <div class="media">
                                                         {{--<a href="#" class="pull-left">--}}
                                                             {{--<img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">--}}
@@ -246,13 +247,14 @@
                                                             <span class="media-meta pull-right">{{\Carbon\Carbon::createFromTimeStamp(strtotime($notification->created_at))->diffForHumans()}}</span>
                                                             <h4 class="title">
                                                                 {{$notification->data['title']}}
-                                                                <span class="pull-right pagado">({{$notification->type == 'App\Notifications\NewEntryDailyWork' ? 'Daily-work':''}}
-                                                                    {{$notification->type == 'App\Notifications\NewCourse' ? 'Course':''}}
+                                                                <span class="pull-right pagado">({{$notification->type == 'App\Notifications\NewEntryDailyWork' || 'App\Notifications\DailyWorkUpdated' ? 'Daily-work':''}}
+                                                                    {{$notification->type == 'App\Notifications\NewCourse' || 'App\Notifications\CourseUpdated' ? 'Course':''}}
                                                                     )</span>
                                                             </h4>
                                                             <p class="summary">{{$notification->data['body']}}</p>
                                                         </div>
                                                     </div>
+                                                    </a>
                                                 </td>
                                             </tr>
                                                {{ $notification->markAsRead()}}
@@ -279,7 +281,9 @@
                                            @foreach(\Illuminate\Support\Facades\Auth::user()->notifications as $notification)
                                             <tr data-status="pendiente" style="display: none;">
                                                 <td>
-                                                    <div class="media">
+
+                                                    <a href="{{url($notification->data['url'])}}">
+                                                        <div class="media">
                                                         {{--<a href="#" class="pull-left">--}}
                                                         {{--<img src="https://s3.amazonaws.com/uifaces/faces/twitter/fffabs/128.jpg" class="media-photo">--}}
                                                         {{--</a>--}}
@@ -287,13 +291,14 @@
                                                             <span class="media-meta pull-right">{{\Carbon\Carbon::createFromTimeStamp(strtotime($notification->created_at))->diffForHumans()}}</span>
                                                             <h4 class="title">
                                                                 {{$notification->data['title']}}
-                                                                <span class="pull-right pagado">({{$notification->type == 'App\Notifications\NewEntryDailyWork' ? 'Daily-work':''}}
-                                                                    {{$notification->type == 'App\Notifications\NewCourse' ? 'Course':''}}
+                                                                <span class="pull-right pagado">({{$notification->type == 'App\Notifications\NewEntryDailyWork' || 'App\Notifications\DailyWorkUpdated' ? 'Daily-work':''}}
+                                                                    {{$notification->type == 'App\Notifications\NewCourse' || 'App\Notifications\CourseUpdated' ? 'Course':''}}
                                                                     )</span>
                                                             </h4>
                                                             <p class="summary">{{$notification->data['body']}}</p>
                                                         </div>
                                                     </div>
+                                                    </a>
                                                 </td>
                                             </tr>
                                             @endforeach

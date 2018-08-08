@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 
@@ -84,7 +83,7 @@ $style = [
                                     <!-- Intro -->
 
                                     <p style="{{ $style['paragraph'] }}">
-                                        You have new work assigned by {{ config('app.name') }} on semester {{$semester->semester_name}}.
+                                        Your work has been updated by {{ config('app.name') }} on semester {{$semester->semester_name}}.
 
                                     </p>
 

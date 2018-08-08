@@ -7,22 +7,22 @@ use Illuminate\Notifications\Notification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 
-class NewEntryDailyWork extends Notification implements ShouldQueue
+class DailyWorkUpdated extends Notification
 {
     use Queueable;
     protected $session_id;
     protected $dailywork;
-    protected $request_hash;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($session_id,$dailywork,$request_hash)
+    public function __construct($session_id,$dailywork)
     {
         $this->session_id = $session_id;
         $this->dailywork = $dailywork;
-        $this->request_hash = $request_hash;
+
     }
 
     /**
@@ -59,12 +59,12 @@ class NewEntryDailyWork extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'title' => 'New Daily Work Entry',
-            'body' => 'New daily work is aasigned to you',
+            'title' => 'Daily Work Entry Update',
+            'body' => 'Daily work is aasigned to you is been updated',
             'semester_id' => $this->session_id,
             'daily_work' => $this->dailywork,
             'type' => 'new-entry-daily-work',
-            'url' =>'tutor-dashboard'.'#'.$this->request_hash
+            'url' =>'tutor-dashboard'
         ];
     }
 }

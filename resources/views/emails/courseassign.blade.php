@@ -70,6 +70,13 @@ $style = [
                         <table style="{{ $style['email-body_inner'] }}" align="center" width="570" cellpadding="0" cellspacing="0">
                             <tr>
                                 <td style="{{ $fontFamily }} {{ $style['email-body_cell'] }}">
+
+                                    <p style="{{ $style['paragraph'] }}">
+                                        To check all of your work details and total extra price <br />
+                                        Log on - <a href="http://software.ecademictube.com">software.ecademictube.com </a><br />
+                                        Username- {{$user->email}} <br />
+                                        Password-123456
+                                    </p>
                                     <!-- Greeting -->
                                     <h1 style="{{ $style['header-1'] }}">
                                         Hello <span style="text-transform:uppercase;">{{ $user->name}},
@@ -78,7 +85,7 @@ $style = [
                                     <!-- Intro -->
 
                                     <p style="{{ $style['paragraph'] }}">
-                                        You have New Course assigned by {{ config('app.name') }}.
+                                        You have New Course assigned by {{ config('app.name') }} on semester {{$semester->semester_name}}.
                                     </p>
 
 

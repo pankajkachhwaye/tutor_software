@@ -64,7 +64,7 @@ class NewCourse extends Notification
             'semester_id' => $this->session_id,
             'daily_work' => $this->course,
             'type' => 'new-course',
-            'url' =>'daily-work-entry/show'.'#'.$this->request_hash
+            'url' =>'tutor-dashboard'.'#'.$this->request_hash
         ];
     }
 }
